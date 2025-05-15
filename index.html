@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Tracker - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="appSection" class="container">
+        <div class="user-info">
+            Welcome, <span id="userEmail"></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+        
+        <h1>Job Application Tracker</h1>
+        
+        <!-- Button Container for better layout -->
+        <div class="button-container">
+            <button onclick="showAddJobModal()">Add New Application</button>
+            <button class="toggle-analytics" onclick="toggleAnalytics()">Toggle Analytics</button>
+        </div>
+        
+        <!-- Analytics Dashboard -->
+        <div id="analyticsSection" class="analytics-dashboard">
+            <h2>Application Analytics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalApplications">0</div>
+                    <div class="stat-label">Total Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingApplications">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="interviewCount">0</div>
+                    <div class="stat-label">Interviews</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="offerCount">0</div>
+                    <div class="stat-label">Offers</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value" id="responseRate">0%</div>
+                    <div class="stat-label">Response Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="rejectionRate">0%</div>
+                    <div class="stat-label">Rejection Rate</div>
+                </div>
+            </div>
+            
+            <!-- Additional insights -->
+            <div class="insights-section">
+                <h3>Insights</h3>
+                <div class="insight-cards">
+                    <div class="insight-card">
+                        <div class="insight-title">Most Active Source</div>
+                        <div class="insight-value" id="topSource">-</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-title">Avg. Response Time</div>
+                        <div class="insight-value" id="avgResponseTime">-</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-title">Applications This Month</div>
+                        <div class="insight-value" id="monthlyApplications">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="job-list" id="jobList">
+            <!-- Job items will be dynamically added here -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Job Modal -->
+    <div id="jobModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Application</h2>
+                <button class="close-modal" onclick="closeJobModal()">&times;</button>
+            </div>
+            
+            <form id="jobForm">
+                <input type="hidden" id="jobId">
+                
+                <div class="form-group">
+                    <label for="jobTitle">Job Title*</label>
+                    <input type="text" id="jobTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="companyName">Company Name*</label>
+                    <input type="text" id="companyName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobSource">Source*</label>
+                    <select id="jobSource" required>
+                        <option value="">Select Source</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                        <option value="Naukri">Naukri</option>
+                        <option value="Indeed">Indeed</option>
+                        <option value="Company Website">Company Website</option>
+                        <option value="Referral">Referral</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="applicationDate">Application Date*</label>
+                    <input type="date" id="applicationDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobStatus">Status*</label>
+                    <select id="jobStatus" required>
+                        <option value="Applied">Applied</option>
+                        <option value="Interview">Interview</option>
+                        <option value="Offer">Offer</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="followUpDate">Follow-up Reminder Date</label>
+                    <input type="date" id="followUpDate">
+                    <small style="color: #666;">Set a date to remind yourself to follow up on this application</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="followUpCompleted">
+                        Mark follow-up as completed
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobDescription">Job Description</label>
+                    <textarea id="jobDescription"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes"></textarea>
+                </div>
+                
+                <button type="submit">Save Application</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
