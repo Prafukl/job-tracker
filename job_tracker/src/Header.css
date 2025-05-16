@@ -1,0 +1,329 @@
+/* ========== RESET ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #f0f2f5;
+  color: #222;
+}
+
+/* ========== HEADER BASE ========== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #0f172a; /* Slate-900 */
+  color: white;
+  padding: 0.75rem 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease-in-out;
+}
+
+/* ========== CONTAINER ========== */
+.header-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ========== LOGO ========== */
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  user-select: none;
+}
+
+/* ========== NAVIGATION LINKS ========== */
+.nav-links {
+  display: flex;
+  gap: 1.8rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #e2e8f0; /* slate-200 */
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #38bdf8; /* sky-400 */
+  transform: translateY(-2px);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #38bdf8;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ========== MENU BUTTON (Hamburger) ========== */
+.menu-button {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1010;
+}
+
+.menu-button span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: #e2e8f0;
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.menu-button.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-button.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-button.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ========== RESPONSIVE NAVIGATION ========== */
+@media (max-width: 768px) {
+  .menu-button {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background-color: #1e293b; /* Slate-800 */
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1rem 0;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add these styles to your Header.css */
+
+/* ========== AUTH BUTTONS ========== */
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+.login-btn, .register-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-btn {
+  background: transparent;
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+}
+
+.login-btn:hover {
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.register-btn {
+  background: #38bdf8;
+  border: 1px solid #38bdf8;
+  color: white;
+}
+
+.register-btn:hover {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+}
+
+/* ========== MODAL STYLES ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.auth-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #334155;
+}
+
+.auth-modal h2 {
+  margin-bottom: 1.5rem;
+  color: #0f172a;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #38bdf8;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 0.5rem;
+}
+
+.submit-btn:hover {
+  background: #0ea5e9;
+}
+
+.form-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #64748b;
+}
+
+.form-switch button {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+.form-switch button:hover {
+  text-decoration: underline;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 768px) {
+  .auth-buttons {
+    margin-left: 0;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .login-btn, .register-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .auth-modal {
+    width: 90%;
+    padding: 1.5rem;
+  }
+}

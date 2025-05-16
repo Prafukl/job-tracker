@@ -1,0 +1,264 @@
+/* Dashboard.css */
+
+:root {
+  --primary: #4f46e5;
+  --primary-light: #6366f1;
+  --secondary: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.dashboard-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: 100vh;
+}
+
+/* Mobile First Styles */
+.dashboard-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.dashboard-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #4f46e5, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.dashboard-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--primary);
+}
+
+.stat-icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.charts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border);
+}
+
+.chart-header {
+  margin-bottom: 1rem;
+}
+
+.chart-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.chart-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.chart-wrapper {
+  height: 250px;
+  position: relative;
+}
+
+/* Tablet and Small Laptop Styles */
+@media (min-width: 600px) {
+  .dashboard-container {
+    padding: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+    border-radius: 0.875rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .chart-wrapper {
+    height: 300px;
+  }
+}
+
+/* Large Tablet and Small Desktop Styles */
+@media (min-width: 768px) {
+  .dashboard-header {
+    text-align: left;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .chart-card {
+    padding: 1.5rem;
+  }
+
+  .chart-title {
+    font-size: 1.25rem;
+  }
+}
+
+/* Desktop Styles */
+@media (min-width: 1024px) {
+  .dashboard-container {
+    max-width: 1440px;
+    padding: 2rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    padding: 1.5rem;
+    border-radius: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .charts-grid {
+    flex-direction: row;
+    grid-template-columns: 2fr 1fr;
+    display: grid;
+    gap: 2rem;
+  }
+
+  .chart-wrapper {
+    height: 350px;
+  }
+}
+
+/* Extra Large Desktop Styles */
+@media (min-width: 1280px) {
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .chart-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Animation for chart elements */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chartjs-render-monitor {
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Very Small Mobile Devices (e.g., iPhone 5/SE) */
+@media (max-width: 320px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 0.875rem;
+  }
+
+  .stat-value {
+    font-size: 1.1rem;
+  }
+
+  .chart-wrapper {
+    height: 200px;
+  }
+}
