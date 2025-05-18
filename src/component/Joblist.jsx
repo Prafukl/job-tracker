@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Calendar, Clock, Building, FileText, Briefcase, CheckCircle, X, Edit, Upload, FileIcon, ExternalLink } from 'lucide-react';
+import { Calendar, Clock, Building, FileText, Briefcase, CheckCircle, X, Edit, Upload, FileIcon } from 'lucide-react';
 import '../Joblist.css';
 import { useAuth } from '../context/AuthContext';
 import { 

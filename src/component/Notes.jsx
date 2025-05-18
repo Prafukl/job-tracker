@@ -325,20 +325,20 @@ const Notes = () => {
     }
   };
 
-  const handleRemoveImage = async (imagePath) => {
-    try {
-      // Create a reference to the file to delete
-      const imageRef = ref(storage, imagePath);
-      await deleteObject(imageRef);
+  // const handleRemoveImage = async (imagePath) => {
+  //   try {
+  //     // Create a reference to the file to delete
+  //     const imageRef = ref(storage, imagePath);
+  //     await deleteObject(imageRef);
       
-      // Update note images
-      setNoteImages(prev => prev.filter(img => img.path !== imagePath));
+  //     // Update note images
+  //     setNoteImages(prev => prev.filter(img => img.path !== imagePath));
       
-    } catch (error) {
-      console.error('Error removing image:', error);
-      alert('Failed to remove image. Please try again.');
-    }
-  };
+  //   } catch (error) {
+  //     console.error('Error removing image:', error);
+  //     alert('Failed to remove image. Please try again.');
+  //   }
+  // };
 
   const openEditor = (isEdit = false, note = null) => {
     if (isEdit && note) {
