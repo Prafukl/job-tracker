@@ -21,13 +21,13 @@ const Footer = () => {
               &copy; {currentYear} <span>Company Name</span>. All rights reserved.
             </p>
           </div>
-          <div className="footer-links-wrapper">
+          {/* <div className="footer-links-wrapper">
             <ul className="footer-links">
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms of Service</a></li>
-              <li><a href="#">Cookie Policy</a></li>
+              <li><a href="A">Privacy Policy</a></li>
+              <li><a href="B">Terms of Service</a></li>
+              <li><a href="C">Cookie Policy</a></li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
