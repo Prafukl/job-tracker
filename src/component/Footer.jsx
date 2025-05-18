@@ -15,10 +15,10 @@ const Footer = () => {
         <div className="copyright-section">
           <div className="copyright-info">
             <div className="company-logo">
-              <span className="logo-text">BRAND</span>
+              <span className="logo-text">Job Tracker</span>
             </div>
             <p className="copyright-text">
-              &copy; {currentYear} <span>Company Name</span>. All rights reserved.
+              &copy; {currentYear} <span>SCT</span>. All rights reserved.
             </p>
           </div>
           {/* <div className="footer-links-wrapper">
