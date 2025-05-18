@@ -5,7 +5,7 @@ import Dashboard from './component/Dashboard';
 import Footer from './component/Footer';
 import Joblist from './component/Joblist';
 import Notes from './component/Notes';
-import { createBrowserRouter, RouterProvider, Outlet, Navigate, redirect } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Protected Route component
