@@ -148,7 +148,7 @@ const Header = () => {
                 <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                 <Link to="/joblist" onClick={() => setIsMenuOpen(false)}>Applications</Link>
                 <Link to="/notes" onClick={() => setIsMenuOpen(false)}>Notes</Link>
-                {/* <Link to="" onClick={() => setIsMenuOpen(false)}>Resources</Link> */}
+                { <Link to="./Knowledge" onClick={() => setIsMenuOpen(false)}>Knowledge</Link> }
               </>
             ) : (
               // Don't show navigation links to non-logged in users

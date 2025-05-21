@@ -5,6 +5,7 @@ import Dashboard from './component/Dashboard';
 import Footer from './component/Footer';
 import Joblist from './component/Joblist';
 import Notes from './component/Notes';
+import Knowledge from './component/Knowledge';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -92,6 +93,10 @@ const AppRouter = () => {
         {
           path: "notes",
           element: <ProtectedRoute><Notes /></ProtectedRoute>,
+        },
+        {
+          path: "Knowledge",
+          element: <ProtectedRoute><Knowledge /></ProtectedRoute>,
         },
       ],
     },
