@@ -21,6 +21,93 @@ export const addJoblistStyles = () => {
       transform: scale(1.1);
       color: #3151d4;
     }
+
+    /* Filter Section Styling */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 15px;
+    }
+
+    .filter-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .filter-icon {
+      color: #64748b;
+    }
+
+    .filter-select {
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      outline: none;
+      min-width: 150px;
+    }
+
+    .filter-select:focus {
+      outline: none;
+    }
+
+    /* Status Badge Enhancements */
+    .status-not-applied {
+      background-color: #f1f5f9;
+      color: #64748b;
+    }
+
+    .status-applied {
+      background-color: #e1f0fa;
+      color: #3498db;
+    }
+
+    .status-interview {
+      background-color: #fef5e6;
+      color: #f39c12;
+    }
+
+    .status-offer {
+      background-color: #e8f8ee;
+      color: #2ecc71;
+    }
+
+    .status-rejected {
+      background-color: #fae6e6;
+      color: #e74c3c;
+    }
+
+    /* Domain Tag Styling */
+    .domain-info {
+      margin-top: 8px;
+    }
+
+    .domain-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: #f0f5ff;
+      color: #4338ca;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #e0e7ff;
+    }
     
     /* Enhanced Modal Styling */
     .modal-overlay {
@@ -423,9 +510,71 @@ export const addJoblistStyles = () => {
     .resume-indicator svg {
       margin-right: 5px;
     }
+
+    /* Enhanced Controls Section */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .add-button {
+      background-color: #4a6cf7;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      white-space: nowrap;
+    }
+    
+    .add-button:hover {
+      background-color: #3b5ce4;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
     
     /* Mobile Responsive Adjustments */
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+      }
+
+      .filters-section {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .filter-dropdowns {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .filter-group {
+        min-width: unset;
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .filter-select {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .add-button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+      
       .modal-content {
         width: 95%;
         max-height: 95vh;
@@ -460,6 +609,24 @@ export const addJoblistStyles = () => {
         padding: 12px;
       }
     }
+
+    @media (max-width: 480px) {
+      .search-group {
+        padding: 8px 12px;
+      }
+
+      .search-input {
+        font-size: 14px;
+      }
+
+      .filter-group {
+        padding: 6px 10px;
+      }
+
+      .filter-select {
+        font-size: 13px;
+      }
+    }
     
     /* Empty state enhancement */
     .empty-state {
@@ -489,23 +656,155 @@ export const addJoblistStyles = () => {
       margin-bottom: 25px;
       font-size: 16px;
     }
-    
-    .add-button {
-      background-color: #4a6cf7;
-      color: white;
+
+    /* Delete Button Styles */
+    .delete-button {
+      background: none;
       border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 5px;
+      color: #e74c3c;
+      transition: all 0.2s;
+      margin-left: auto;
     }
-    
-    .add-button:hover {
-      background-color: #3b5ce4;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+
+    .delete-button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Card Bottom Section */
+    .card-bottom-section {
+      display: flex;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+      margin-top: 15px;
+    }
+
+    /* Application Card Enhancements */
+    .applications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    .application-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      padding: 25px;
+      transition: all 0.3s ease;
+      border: 1px solid #eaeaea;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .application-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      border-color: #d0d0d0;
+    }
+
+    .application-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, #4CAF50, #2196F3);
+    }
+
+    .card-top-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      align-items: flex-start;
+    }
+
+    .title-section {
+      flex: 1;
+      padding-right: 10px;
+    }
+
+    .job-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      color: #2c3e50;
+      line-height: 1.3;
+    }
+
+    .company-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .company-info .icon {
+      width: 18px;
+      height: 18px;
+      color: #4CAF50;
+    }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .card-details {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      color: #555;
+    }
+
+    .detail-item .icon {
+      width: 18px;
+      height: 18px;
+      color: #6e8efb;
+    }
+
+    .follow-up-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .follow-up-item .icon {
+      width: 16px;
+      height: 16px;
+      color: #f39c12;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: #95a5a6;
+    }
+
+    .completed-icon {
+      width: 16px;
+      height: 16px;
+      color: #2ecc71;
+      margin-left: 5px;
     }
   `;
   document.head.appendChild(styleElement);

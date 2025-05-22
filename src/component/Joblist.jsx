@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Calendar, Clock, Building, FileText, Briefcase, CheckCircle, X, Edit, Upload, FileIcon } from 'lucide-react';
+import { Calendar, Clock, Building, FileText, Briefcase, CheckCircle, X, Edit, Upload, FileIcon, ExternalLink, Search, Plus } from 'lucide-react';
 import '../Joblist.css';
 import { useAuth } from '../context/AuthContext';
 import { 
@@ -28,10 +28,17 @@ const Application = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [applications, setApplications] = useState([]);
+  const [filteredApplications, setFilteredApplications] = useState([]);
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [domainFilter, setDomainFilter] = useState('All');
+  const [companyFilter, setCompanyFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
     jobTitle: '',
     companyName: '',
     jobSource: '',
+    jobDomain: '',
+    jobUrl: '',
     applicationDate: '',
     jobStatus: 'Applied',
     followUpDate: '',
@@ -55,11 +62,65 @@ const Application = () => {
   const { currentUser } = useAuth();
   const storage = getStorage();
 
+  // Domain categories for different career fields
+  const domainCategories = [
+    'Software Engineering',
+    'Data Engineering', 
+    'Web Development',
+    'Mobile Development',
+    'DevOps',
+    'Cloud Computing',
+    'IT Support',
+    'Cybersecurity',
+    'Network Administration',
+    'Database Administration',
+    'System Administration',
+    'UX/UI Design',
+    'Graphic Design',
+    'Product Management',
+    'Project Management',
+    'Business Analyst',
+    'Data Analyst',
+    'Data Scientist',
+    'Machine Learning Engineer',
+    'AI Engineer',
+    'Quality Assurance',
+    'Technical Writing',
+    'Sales Engineer',
+    'Customer Success',
+    'Marketing',
+    'Finance',
+    'Human Resources',
+    'Operations',
+    'Consulting',
+    'Other'
+  ];
+
+  // Status options including "Not Applied"
+  const statusOptions = [
+    'Not Applied',
+    'Applied', 
+    'Interview',
+    'Offer',
+    'Rejected'
+  ];
+
+  // Filter options for the dropdown
+  const filterOptions = [
+    'All',
+    'Not Applied',
+    'Applied',
+    'Interview', 
+    'Offer',
+    'Rejected'
+  ];
+
   // Load applications from Firestore on component mount and when user changes
   useEffect(() => {
     const fetchApplications = async () => {
       if (!currentUser) {
         setApplications([]);
+        setFilteredApplications([]);
         setLoading(false);
         return;
       }
@@ -79,6 +140,7 @@ const Application = () => {
         });
         
         setApplications(fetchedApplications);
+        setFilteredApplications(fetchedApplications);
       } catch (error) {
         console.error('Error fetching applications:', error);
       } finally {
@@ -95,6 +157,50 @@ const Application = () => {
     return () => removeStyles();
   }, [currentUser]);
 
+  // Filter applications based on status, domain, company, and search term
+  useEffect(() => {
+    let filtered = applications;
+
+    // Status filter
+    if (statusFilter !== 'All') {
+      filtered = filtered.filter(app => app.jobStatus === statusFilter);
+    }
+
+    // Domain filter
+    if (domainFilter !== 'All') {
+      filtered = filtered.filter(app => app.jobDomain === domainFilter);
+    }
+
+    // Company filter
+    if (companyFilter !== 'All') {
+      filtered = filtered.filter(app => app.companyName === companyFilter);
+    }
+
+    // Search term filter
+    if (searchTerm.trim()) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(app => 
+        app.jobTitle?.toLowerCase().includes(searchLower) ||
+        app.companyName?.toLowerCase().includes(searchLower) ||
+        app.jobDomain?.toLowerCase().includes(searchLower) ||
+        app.notes?.toLowerCase().includes(searchLower)
+      );
+    }
+
+    setFilteredApplications(filtered);
+  }, [applications, statusFilter, domainFilter, companyFilter, searchTerm]);
+
+  // Get unique companies and domains for filter dropdowns
+  const getUniqueCompanies = () => {
+    const companies = [...new Set(applications.map(app => app.companyName).filter(Boolean))];
+    return companies.sort();
+  };
+
+  const getUniqueDomains = () => {
+    const domains = [...new Set(applications.map(app => app.jobDomain).filter(Boolean))];
+    return domains.sort();
+  };
+
   const openModal = (isEdit = false, application = null) => {
     if (isEdit && application) {
       // Set form data for editing
@@ -102,6 +208,8 @@ const Application = () => {
         jobTitle: application.jobTitle || '',
         companyName: application.companyName || '',
         jobSource: application.jobSource || '',
+        jobDomain: application.jobDomain || '',
+        jobUrl: application.jobUrl || '',
         applicationDate: application.applicationDate || new Date().toISOString().split('T')[0],
         jobStatus: application.jobStatus || 'Applied',
         followUpDate: application.followUpDate || '',
@@ -119,8 +227,10 @@ const Application = () => {
         jobTitle: '',
         companyName: '',
         jobSource: '',
+        jobDomain: '',
+        jobUrl: '',
         applicationDate: new Date().toISOString().split('T')[0],
-        jobStatus: 'Applied',
+        jobStatus: 'Not Applied',
         followUpDate: '',
         followUpCompleted: false,
         jobDescription: '',
@@ -437,6 +547,7 @@ const Application = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
+      case 'Not Applied': return 'status-not-applied';
       case 'Applied': return 'status-applied';
       case 'Interview': return 'status-interview';
       case 'Offer': return 'status-offer';
@@ -459,7 +570,163 @@ const Application = () => {
     <div className="application-container">
       <div className="main-content">
         <div className="controls">
+          <div className="filters-section">
+            {/* Search Bar */}
+            <div className="search-container">
+              <div className="search-group">
+                <Search className="search-icon" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search jobs, companies, domains..."
+                  className="search-input"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <button 
+                    className="clear-search-btn"
+                    onClick={() => setSearchTerm('')}
+                    title="Clear search"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Filter Pills Row */}
+            <div className="filter-pills-container">
+              <div className="filter-pills">
+                {/* Status Filter */}
+                <div className="filter-pill">
+                  <div className="filter-pill-header">
+                    <div className="filter-pill-icon">
+                      <CheckCircle size={16} />
+                    </div>
+                    <span className="filter-pill-label">Status</span>
+                  </div>
+                  <select 
+                    value={statusFilter} 
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="filter-pill-select"
+                  >
+                    <option value="All">All Status</option>
+                    {filterOptions.slice(1).map(option => (
+                      <option key={option} value={option}>
+                        {option} ({applications.filter(app => app.jobStatus === option).length})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Domain Filter */}
+                <div className="filter-pill">
+                  <div className="filter-pill-header">
+                    <div className="filter-pill-icon">
+                      <Briefcase size={16} />
+                    </div>
+                    <span className="filter-pill-label">Domain</span>
+                  </div>
+                  <select 
+                    value={domainFilter} 
+                    onChange={(e) => setDomainFilter(e.target.value)}
+                    className="filter-pill-select"
+                  >
+                    <option value="All">All Domains</option>
+                    {getUniqueDomains().map(domain => (
+                      <option key={domain} value={domain}>
+                        {domain} ({applications.filter(app => app.jobDomain === domain).length})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Company Filter */}
+                <div className="filter-pill">
+                  <div className="filter-pill-header">
+                    <div className="filter-pill-icon">
+                      <Building size={16} />
+                    </div>
+                    <span className="filter-pill-label">Company</span>
+                  </div>
+                  <select 
+                    value={companyFilter} 
+                    onChange={(e) => setCompanyFilter(e.target.value)}
+                    className="filter-pill-select"
+                  >
+                    <option value="All">All Companies</option>
+                    {getUniqueCompanies().map(company => (
+                      <option key={company} value={company}>
+                        {company} ({applications.filter(app => app.companyName === company).length})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Active Filters & Clear All */}
+              {(statusFilter !== 'All' || domainFilter !== 'All' || companyFilter !== 'All' || searchTerm) && (
+                <div className="active-filters">
+                  <span className="active-filters-label">Active filters:</span>
+                  <div className="active-filter-tags">
+                    {searchTerm && (
+                      <div className="active-filter-tag">
+                        <span>"{searchTerm}"</span>
+                        <button onClick={() => setSearchTerm('')}>
+                          <X size={12} />
+                        </button>
+                      </div>
+                    )}
+                    {statusFilter !== 'All' && (
+                      <div className="active-filter-tag">
+                        <span>Status: {statusFilter}</span>
+                        <button onClick={() => setStatusFilter('All')}>
+                          <X size={12} />
+                        </button>
+                      </div>
+                    )}
+                    {domainFilter !== 'All' && (
+                      <div className="active-filter-tag">
+                        <span>Domain: {domainFilter}</span>
+                        <button onClick={() => setDomainFilter('All')}>
+                          <X size={12} />
+                        </button>
+                      </div>
+                    )}
+                    {companyFilter !== 'All' && (
+                      <div className="active-filter-tag">
+                        <span>Company: {companyFilter}</span>
+                        <button onClick={() => setCompanyFilter('All')}>
+                          <X size={12} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <button 
+                    className="clear-all-filters-btn"
+                    onClick={() => {
+                      setStatusFilter('All');
+                      setDomainFilter('All');
+                      setCompanyFilter('All');
+                      setSearchTerm('');
+                    }}
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Results Summary */}
+            <div className="results-summary">
+              <span className="results-count">
+                Showing {filteredApplications.length} of {applications.length} applications
+              </span>
+            </div>
+          </div>
+          
           <button onClick={() => openModal(false)} className="add-button">
+            <Plus size={18} />
             Add Application
           </button>
         </div>
@@ -471,7 +738,7 @@ const Application = () => {
         ) : (
           <>
             <div className="applications-grid">
-              {applications.map(app => (
+              {filteredApplications.map(app => (
                 <div key={app.id} className="application-card">
                   <div className="card-top-section">
                     <div className="title-section">
@@ -480,6 +747,11 @@ const Application = () => {
                         <Building className="icon" />
                         <span className="company-name">{app.companyName}</span>
                       </div>
+                      {app.jobDomain && (
+                        <div className="domain-info">
+                          <span className="domain-tag">{app.jobDomain}</span>
+                        </div>
+                      )}
                     </div>
                     <div className={`status-badge ${getStatusColor(app.jobStatus)}`}>
                       {app.jobStatus}
@@ -493,8 +765,25 @@ const Application = () => {
                     </div>
                     <div className="detail-item">
                       <Calendar className="icon" />
-                      <span>Applied: {formatDate(app.applicationDate)}</span>
+                      <span>
+                        {app.jobStatus === 'Not Applied' ? 'Target Date: ' : 'Applied: '}
+                        {formatDate(app.applicationDate)}
+                      </span>
                     </div>
+                    {app.jobUrl && app.jobStatus === 'Not Applied' && (
+                      <div className="detail-item">
+                        <ExternalLink className="icon" size={16} />
+                        <a 
+                          href={app.jobUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="job-url-link"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          View Job Posting
+                        </a>
+                      </div>
+                    )}
                     {app.resumeURL && (
                       <div 
                         className="resume-indicator"
@@ -540,16 +829,41 @@ const Application = () => {
               ))}
             </div>
 
-            {applications.length === 0 && (
+            {filteredApplications.length === 0 && (
               <div className="empty-state">
                 <div className="empty-icon">
                   <Briefcase className="icon" />
                 </div>
-                <h3>No applications yet</h3>
-                <p>Start tracking your job applications today</p>
-                <button onClick={() => openModal(false)} className="add-button">
-                  Add Your First Application
-                </button>
+                <h3>
+                  {applications.length === 0 
+                    ? 'No applications yet' 
+                    : `No applications match your filters`}
+                </h3>
+                <p>
+                  {applications.length === 0 
+                    ? 'Start tracking your job applications today'
+                    : searchTerm 
+                      ? `No applications found for "${searchTerm}"`
+                      : 'Try adjusting your filters to see more results.'}
+                </p>
+                {applications.length === 0 && (
+                  <button onClick={() => openModal(false)} className="add-button">
+                    Add Your First Application
+                  </button>
+                )}
+                {applications.length > 0 && (
+                  <button 
+                    onClick={() => {
+                      setStatusFilter('All');
+                      setDomainFilter('All');
+                      setCompanyFilter('All');
+                      setSearchTerm('');
+                    }} 
+                    className="clear-filters-button"
+                  >
+                    Clear All Filters
+                  </button>
+                )}
               </div>
             )}
           </>
@@ -621,32 +935,73 @@ const Application = () => {
                   required
                 />
               </div>
-              
-              <div className="form-group">
-                <label htmlFor="jobSource" className="form-label">
-                  Source
-                </label>
-                <select 
-                  id="jobSource" 
-                  value={formData.jobSource} 
-                  onChange={handleChange}
-                  className="form-input"
-                >
-                  <option value="">Select Source</option>
-                  <option value="LinkedIn">LinkedIn</option>
-                  <option value="Indeed">Indeed</option>
-                  <option value="Company Website">Company Website</option>
-                  <option value="Referral">Referral</option>
-                  <option value="Job Board">Job Board</option>
-                  <option value="Recruiter">Recruiter</option>
-                  <option value="Other">Other</option>
-                </select>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="jobDomain" className="form-label">
+                    Domain/Field*
+                  </label>
+                  <select 
+                    id="jobDomain" 
+                    value={formData.jobDomain} 
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                  >
+                    <option value="">Select Domain</option>
+                    {domainCategories.map(domain => (
+                      <option key={domain} value={domain}>
+                        {domain}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="jobSource" className="form-label">
+                    Source
+                  </label>
+                  <select 
+                    id="jobSource" 
+                    value={formData.jobSource} 
+                    onChange={handleChange}
+                    className="form-input"
+                  >
+                    <option value="">Select Source</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Indeed">Indeed</option>
+                    <option value="Company Website">Company Website</option>
+                    <option value="Referral">Referral</option>
+                    <option value="Job Board">Job Board</option>
+                    <option value="Recruiter">Recruiter</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
               </div>
+
+              {formData.jobStatus === 'Not Applied' && (
+                <div className="form-group">
+                  <label htmlFor="jobUrl" className="form-label">
+                    Job URL
+                  </label>
+                  <input 
+                    type="url" 
+                    id="jobUrl" 
+                    value={formData.jobUrl} 
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="https://example.com/job-posting"
+                  />
+                  <small className="form-hint">
+                    Save the job posting URL so you can easily apply later
+                  </small>
+                </div>
+              )}
               
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="applicationDate" className="form-label">
-                    Application Date*
+                    {formData.jobStatus === 'Not Applied' ? 'Target Date*' : 'Application Date*'}
                   </label>
                   <input 
                     type="date" 
@@ -668,10 +1023,11 @@ const Application = () => {
                     onChange={handleChange}
                     className="form-input"
                   >
-                    <option value="Applied">Applied</option>
-                    <option value="Interview">Interview</option>
-                    <option value="Offer">Offer</option>
-                    <option value="Rejected">Rejected</option>
+                    {statusOptions.map(status => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
