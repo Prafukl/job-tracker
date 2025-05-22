@@ -136,6 +136,9 @@ const Header = () => {
     }
   };
 
+  // Check if current user is admin
+  const isAdmin = currentUser && currentUser.email === 'admin@gmail.com';
+
   return (
     <>
       <header className="header">
@@ -143,12 +146,13 @@ const Header = () => {
           <div className="logo">JobTrack</div>
           
           <nav className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-                          {currentUser ? (
+            {currentUser ? (
               <>
                 <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>Dashboard</Link>
                 <Link to="/joblist" onClick={() => setIsMenuOpen(false)}>Applications</Link>
                 <Link to="/notes" onClick={() => setIsMenuOpen(false)}>Notes</Link>
-                { <Link to="./Knowledge" onClick={() => setIsMenuOpen(false)}>Knowledge</Link> }
+                <Link to="/knowledge" onClick={() => setIsMenuOpen(false)}>Knowledge</Link>
+                <Link to="/tutorials" onClick={() => setIsMenuOpen(false)}>Tutorials</Link>
               </>
             ) : (
               // Don't show navigation links to non-logged in users
@@ -159,7 +163,7 @@ const Header = () => {
               {currentUser ? (
                 <>
                   <span style={{color: 'white', marginRight: '10px'}}>
-                    Hello, {currentUser.displayName || 'User'}
+                    {isAdmin ? '👑 Admin' : `Hello, ${currentUser.displayName || 'User'}`}
                   </span>
                   <button className="login-btn" onClick={handleLogout}>Logout</button>
                 </>
