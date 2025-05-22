@@ -143,7 +143,7 @@ const Header = () => {
     <>
       <header className="header">
         <div className="header-container">
-          <div className="logo">JobTrack</div>
+          <div className="logo">JobTracker</div>
           
           <nav className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
             {currentUser ? (
