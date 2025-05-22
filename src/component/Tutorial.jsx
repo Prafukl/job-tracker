@@ -38,7 +38,7 @@ const Tutorial = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [tutorialToDelete, setTutorialToDelete] = useState(null);
-  const [categories, setCategories] = useState([
+  const [categories] = useState([
     'Software Engineering', 
     'Data Engineering', 
     'Web Development',
@@ -48,7 +48,10 @@ const Tutorial = () => {
     'IT Support',
     'Cybersecurity',
     'UX/UI Design',
-    'Project Management'
+    'Project Management',
+    'Linkedin',
+    'Resume Building',
+    'Email Writing'
   ]);
   const [activeCategory, setActiveCategory] = useState('All');
   const [uploadProgress, setUploadProgress] = useState(0);
