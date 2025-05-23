@@ -806,6 +806,394 @@ export const addJoblistStyles = () => {
       color: #2ecc71;
       margin-left: 5px;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+    /* ====== FILTER SECTION ONLY STYLING ====== */
+
+/* Filters Section */
+.filters-section {
+  flex: 1;
+  min-width: 600px;
+}
+
+/* ====== SEARCH CONTAINER ====== */
+.search-container {
+  margin-bottom: 24px;
+}
+
+.search-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.search-group:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.search-group:focus-within {
+  border-color: #4a6cf7;
+  box-shadow: 
+    0 0 0 3px rgba(74, 108, 247, 0.1),
+    0 6px 20px rgba(74, 108, 247, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Search Icon */
+.search-icon {
+  position: absolute;
+  left: 16px;
+  color: #94a3b8;
+  transition: color 0.3s ease;
+  z-index: 2;
+}
+
+.search-group:focus-within .search-icon {
+  color: #4a6cf7;
+}
+
+/* Search Input */
+.search-input {
+  width: 100%;
+  padding: 16px 20px 16px 50px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1e293b;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.search-input:focus::placeholder {
+  opacity: 0.6;
+}
+
+/* Clear Search Button */
+.clear-search-btn {
+  position: absolute;
+  right: 12px;
+  background: #fee2e2;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #ef4444;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clear-search-btn:hover {
+  background: #fecaca;
+  transform: scale(1.05);
+}
+
+/* ====== FILTER PILLS CONTAINER ====== */
+.filter-pills-container {
+  margin-bottom: 20px;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+/* Filter Pills */
+.filter-pill {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 4px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  min-width: 200px;
+}
+
+.filter-pill:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.filter-pill:focus-within {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+}
+
+/* Filter Pill Header */
+.filter-pill-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px 8px 16px;
+}
+
+.filter-pill-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #4a6cf7;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(74, 108, 247, 0.3);
+}
+
+.filter-pill-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Filter Select */
+.filter-pill-select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 8px 16px 12px 41px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%234a6cf7' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 36px;
+}
+
+.filter-pill-select:focus {
+  color: #4a6cf7;
+  font-weight: 600;
+}
+
+/* ====== ACTIVE FILTERS ====== */
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+  padding: 16px 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.active-filters-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.active-filter-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.active-filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #4a6cf7;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(74, 108, 247, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+.active-filter-tag button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.active-filter-tag button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.clear-all-filters-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.clear-all-filters-btn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+/* ====== RESULTS SUMMARY ====== */
+.results-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.results-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* ====== ANIMATIONS ====== */
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ====== RESPONSIVE DESIGN FOR FILTERS ====== */
+@media (max-width: 1024px) {
+  .filters-section {
+    min-width: 500px;
+  }
+
+  .filter-pills {
+    gap: 12px;
+  }
+
+  .filter-pill {
+    min-width: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .filters-section {
+    min-width: 0;
+  }
+
+  .filter-pills {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filter-pill {
+    min-width: 0;
+  }
+
+  .active-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .active-filter-tags {
+    width: 100%;
+  }
+
+  .search-input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  .search-group {
+    border-radius: 8px;
+  }
+
+  .search-input {
+    padding: 14px 16px 14px 46px;
+    font-size: 15px;
+  }
+
+  .search-icon {
+    left: 14px;
+  }
+
+  .filter-pill {
+    border-radius: 12px;
+  }
+
+  .filter-pill-header {
+    padding: 10px 14px 6px 14px;
+  }
+
+  .filter-pill-select {
+    padding: 6px 14px 10px 36px;
+    font-size: 14px;
+  }
+
+  .active-filters {
+    padding: 12px 16px;
+  }
+
+  .results-summary {
+    padding: 10px 16px;
+  }
+}
+
+/* ====== FOCUS AND ACCESSIBILITY FOR FILTERS ====== */
+.filter-pill:focus-within,
+.search-group:focus-within {
+  outline: 2px solid #4a6cf7;
+  outline-offset: 2px;
+}
   `;
   document.head.appendChild(styleElement);
   
