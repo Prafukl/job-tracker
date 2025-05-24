@@ -7,6 +7,7 @@ import Joblist from './component/Joblist';
 import Notes from './component/Notes';
 import Knowledge from './component/Knowledge';
 import Tutorial from './component/Tutorial';
+import InterviewPrep from './component/InterviewPrep';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -103,6 +104,10 @@ const AppRouter = () => {
           path: "tutorials",
           element: <ProtectedRoute><Tutorial /></ProtectedRoute>,
         },
+        {
+  path: "interview-prep",
+  element: <ProtectedRoute><InterviewPrep /></ProtectedRoute>,
+}
       ],
     },
   ]);
