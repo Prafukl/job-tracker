@@ -1,4 +1,4 @@
-// src/component/Header.jsx
+// src/component/Header.jsx - Enhanced with Okta-style dropdowns
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -8,13 +8,24 @@ import {
   User, 
   LogOut, 
   Crown,
-  ChevronDown
+  ChevronDown,
+  BookOpen,
+  Target,
+  FileText,
+  Briefcase,
+  BarChart3,
+  Lightbulb,
+  Play,
+  Calendar,
+  Settings,
+  HelpCircle
 } from 'lucide-react';
 import '../Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -30,14 +41,62 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Navigation items
-  const navItems = [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/joblist', label: 'Applications' },
-    { path: '/notes', label: 'Notes' },
-    { path: '/knowledge', label: 'Knowledge' },
-    { path: '/tutorials', label: 'Tutorials' },
-    { path: '/interview-prep', label: 'Interview Prep' },
+  // Enhanced navigation items with categories and dropdowns
+  const navigationCategories = {
+    'Applications': {
+      icon: <Briefcase size={16} />,
+      items: [
+        {
+          path: '/joblist',
+          label: 'All Applications',
+          description: 'View and manage all your job applications',
+          icon: <FileText size={16} />
+        }
+      ]
+    },
+    'Learning': {
+      icon: <BookOpen size={16} />,
+      items: [
+        {
+          path: '/tutorials',
+          label: 'Video Tutorials',
+          description: 'Watch helpful career development videos',
+          icon: <Play size={16} />
+        },
+        {
+          path: '/knowledge',
+          label: 'Knowledge Tools',
+          description: 'Access useful career tools and resources',
+          icon: <Lightbulb size={16} />
+        },
+        {
+          path: '/interview-prep',
+          label: 'Interview Prep',
+          description: 'Practice with custom question sets',
+          icon: <Target size={16} />
+        }
+      ]
+    },
+    'Organization': {
+      icon: <Calendar size={16} />,
+      items: [
+        {
+          path: '/notes',
+          label: 'Notes',
+          description: 'Keep track of important information',
+          icon: <FileText size={16} />
+        }
+      ]
+    }
+  };
+
+  // Navigation items that don't need dropdowns
+  const simpleNavItems = [
+    { 
+      path: '/dashboard', 
+      label: 'Dashboard', 
+      icon: <BarChart3 size={16} /> 
+    }
   ];
 
   // Auto-open login modal when on the login page and not logged in
@@ -48,10 +107,11 @@ const Header = () => {
     }
   }, [location.pathname, currentUser, showLoginModal, showRegisterModal]);
 
-  // Close mobile menu when location changes
+  // Close menus when location changes
   useEffect(() => {
     setIsMenuOpen(false);
     setIsProfileMenuOpen(false);
+    setActiveDropdown(null);
   }, [location.pathname]);
 
   // Close menus when clicking outside
@@ -60,6 +120,7 @@ const Header = () => {
       if (!event.target.closest('.header-container')) {
         setIsMenuOpen(false);
         setIsProfileMenuOpen(false);
+        setActiveDropdown(null);
       }
     };
 
@@ -70,11 +131,19 @@ const Header = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     setIsProfileMenuOpen(false);
+    setActiveDropdown(null);
   };
 
   const toggleProfileMenu = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
     setIsMenuOpen(false);
+    setActiveDropdown(null);
+  };
+
+  const handleDropdownToggle = (categoryName) => {
+    setActiveDropdown(activeDropdown === categoryName ? null : categoryName);
+    setIsMenuOpen(false);
+    setIsProfileMenuOpen(false);
   };
 
   const openLoginModal = () => {
@@ -82,6 +151,7 @@ const Header = () => {
     setIsLoginForm(true);
     setIsMenuOpen(false);
     setIsProfileMenuOpen(false);
+    setActiveDropdown(null);
     clearFields();
   };
 
@@ -90,6 +160,7 @@ const Header = () => {
     setIsLoginForm(false);
     setIsMenuOpen(false);
     setIsProfileMenuOpen(false);
+    setActiveDropdown(null);
     clearFields();
   };
 
@@ -174,6 +245,7 @@ const Header = () => {
     try {
       await logout();
       setIsProfileMenuOpen(false);
+      setActiveDropdown(null);
       navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);
@@ -182,6 +254,12 @@ const Header = () => {
 
   // Check if current user is admin
   const isAdmin = currentUser && currentUser.email === 'admin@gmail.com';
+
+  // Check if current path is active for dropdown items
+  const isPathActive = (path) => location.pathname === path;
+  const isCategoryActive = (category) => {
+    return category.items.some(item => location.pathname === item.path);
+  };
 
   return (
     <>
@@ -195,19 +273,72 @@ const Header = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation with Dropdowns */}
           {currentUser && (
             <nav className="desktop-navigation">
-              {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
+              {/* Simple nav items */}
+              {simpleNavItems.map((item) => {
+                const isActive = isPathActive(item.path);
                 return (
                   <Link
                     key={item.path}
                     to={item.path}
                     className={`nav-item ${isActive ? 'active' : ''}`}
+                    onClick={() => setActiveDropdown(null)}
                   >
-                    {item.label}
+                    {item.icon}
+                    <span>{item.label}</span>
                   </Link>
+                );
+              })}
+
+              {/* Dropdown categories */}
+              {Object.entries(navigationCategories).map(([categoryName, category]) => {
+                const isActive = isCategoryActive(category);
+                const isDropdownOpen = activeDropdown === categoryName;
+                
+                return (
+                  <div key={categoryName} className="nav-dropdown-container">
+                    <button
+                      className={`nav-dropdown-trigger ${isActive ? 'active' : ''} ${isDropdownOpen ? 'open' : ''}`}
+                      onClick={() => handleDropdownToggle(categoryName)}
+                      onMouseEnter={() => setActiveDropdown(categoryName)}
+                    >
+                      {category.icon}
+                      <span>{categoryName}</span>
+                      <ChevronDown size={14} className={`dropdown-chevron ${isDropdownOpen ? 'open' : ''}`} />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {isDropdownOpen && (
+                      <div 
+                        className="nav-dropdown-menu"
+                        onMouseLeave={() => setActiveDropdown(null)}
+                      >
+                        <div className="dropdown-content">
+                          {category.items.map((item) => {
+                            const isItemActive = isPathActive(item.path);
+                            return (
+                              <Link
+                                key={item.path}
+                                to={item.path}
+                                className={`dropdown-item ${isItemActive ? 'active' : ''}`}
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                <div className="dropdown-item-icon">
+                                  {item.icon}
+                                </div>
+                                <div className="dropdown-item-content">
+                                  <div className="dropdown-item-title">{item.label}</div>
+                                  <div className="dropdown-item-description">{item.description}</div>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </nav>
@@ -318,8 +449,9 @@ const Header = () => {
 
                   {/* Mobile Navigation Links */}
                   <div className="mobile-nav-items">
-                    {navItems.map((item) => {
-                      const isActive = location.pathname === item.path;
+                    {/* Simple nav items */}
+                    {simpleNavItems.map((item) => {
+                      const isActive = isPathActive(item.path);
                       return (
                         <Link
                           key={item.path}
@@ -327,10 +459,40 @@ const Header = () => {
                           className={`mobile-nav-item ${isActive ? 'active' : ''}`}
                           onClick={() => setIsMenuOpen(false)}
                         >
-                          {item.label}
+                          {item.icon}
+                          <span>{item.label}</span>
                         </Link>
                       );
                     })}
+
+                    {/* Category sections */}
+                    {Object.entries(navigationCategories).map(([categoryName, category]) => (
+                      <div key={categoryName} className="mobile-nav-category">
+                        <div className="mobile-nav-category-header">
+                          {category.icon}
+                          <span>{categoryName}</span>
+                        </div>
+                        <div className="mobile-nav-category-items">
+                          {category.items.map((item) => {
+                            const isActive = isPathActive(item.path);
+                            return (
+                              <Link
+                                key={item.path}
+                                to={item.path}
+                                className={`mobile-nav-item mobile-nav-sub-item ${isActive ? 'active' : ''}`}
+                                onClick={() => setIsMenuOpen(false)}
+                              >
+                                {item.icon}
+                                <div className="mobile-nav-item-content">
+                                  <span className="mobile-nav-item-title">{item.label}</span>
+                                  <span className="mobile-nav-item-description">{item.description}</span>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   <div className="mobile-menu-divider"></div>
