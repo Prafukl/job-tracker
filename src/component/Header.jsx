@@ -17,8 +17,6 @@ import {
   Lightbulb,
   Play,
   Calendar,
-  Settings,
-  HelpCircle
 } from 'lucide-react';
 import '../Header.css';
 
