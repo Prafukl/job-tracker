@@ -5,6 +5,7 @@ import {
   orderBy, 
   getDocs, 
   addDoc, 
+  updateDoc, 
   deleteDoc, 
   doc, 
   serverTimestamp 
@@ -25,7 +26,9 @@ import {
   Youtube, 
   FileVideo,
   Trash2, 
-  Plus
+  Plus,
+  Edit,
+  
 } from 'lucide-react';
 import { addTutorialStyles } from './TutorialStyles';
 
@@ -37,22 +40,147 @@ const Tutorial = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [tutorialToDelete, setTutorialToDelete] = useState(null);
-  const [categories] = useState([
-    'Software Engineering', 
-    'Data Engineering', 
-    'Web Development',
-    'Mobile Development',
-    'DevOps',
-    'Cloud Computing',
-    'IT Support',
-    'Cybersecurity',
-    'UX/UI Design',
-    'Project Management',
-    'Linkedin',
-    'Resume Building',
-    'Email Writing'
-  ]);
+  const [editingTutorial, setEditingTutorial] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+  
+  // Enhanced categories with subdomains
+  const categories = {
+    'Software Engineering': [
+      'Full Stack Development',
+      'Backend Development', 
+      'Frontend Development',
+      'Mobile Development',
+      'Game Development',
+      'API Development',
+      'Microservices',
+      'Software Architecture'
+    ],
+    'Data Engineering': [
+      'ETL Pipelines',
+      'Data Warehousing',
+      'Big Data',
+      'Stream Processing',
+      'Data Lake',
+      'Apache Spark',
+      'Kafka',
+      'Airflow'
+    ],
+    'Web Development': [
+      'React.js',
+      'Angular',
+      'Vue.js',
+      'Node.js',
+      'Django',
+      'Laravel',
+      'WordPress',
+      'E-commerce'
+    ],
+    'Mobile Development': [
+      'React Native',
+      'Flutter',
+      'iOS Development',
+      'Android Development',
+      'Xamarin',
+      'Ionic',
+      'Progressive Web Apps'
+    ],
+    'DevOps': [
+      'CI/CD',
+      'Docker',
+      'Kubernetes',
+      'Infrastructure as Code',
+      'Monitoring',
+      'GitOps',
+      'Configuration Management'
+    ],
+    'Cloud Computing': [
+      'AWS',
+      'Azure',
+      'Google Cloud',
+      'Serverless',
+      'virtualization',
+      'Containerization',
+      'Cloud Security',
+      'Multi-cloud'
+    ],
+    'IT Support': [
+      'Help Desk',
+      'System Administration',
+      'Network Troubleshooting',
+      'Hardware Support',
+      'Software Installation',
+      'User Training'
+    ],
+    'Cybersecurity': [
+      'Penetration Testing',
+      'Network Security',
+      'Application Security',
+      'Cloud Security',
+      'Incident Response',
+      'Compliance',
+      'Threat Intelligence'
+    ],
+    'UX/UI Design': [
+      'User Research',
+      'Wireframing',
+      'Prototyping',
+      'Visual Design',
+      'Interaction Design',
+      'Design Systems',
+      'Usability Testing'
+    ],
+
+    'Computer Hardware' :[
+      'UPS',
+      'SMPS',
+      'CPU',
+      'GPU',
+      'Motherboard',
+      'Mointer',
+      'cmos battery'
+    
+       
+    ],
+    
+    'Project Management': [
+      'Agile/Scrum',
+      'Waterfall',
+      'Risk Management',
+      'Stakeholder Management',
+      'Budget Management',
+      'Team Leadership'
+    ],
+    'Linkedin': [
+      'Profile Optimization',
+      'Networking',
+      'Job Search',
+      'Content Strategy',
+      'Personal Branding',
+      'LinkedIn Ads'
+    ],
+    'Resume Building': [
+      'ATS Optimization',
+      'Cover Letters',
+      'Portfolio Development',
+      'Industry-Specific Resumes',
+      'Interview Preparation'
+    ],
+    'Networking' :[
+      'Basic Concepts'
+
+    ],
+
+    'Email Writing': [
+      'Professional Communication',
+      'Follow-up Emails',
+      'Cold Outreach',
+      'Email Etiquette',
+      'Networking Emails'
+    ]
+  };
+
   const [activeCategory, setActiveCategory] = useState('All');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
@@ -60,7 +188,8 @@ const Tutorial = () => {
     title: '',
     description: '',
     category: 'Software Engineering',
-    videoType: 'youtube', // 'youtube' or 'file'
+    subdomain: '',
+    videoType: 'youtube',
     youtubeUrl: '',
     videoFile: null,
     videoUrl: '',
@@ -121,8 +250,6 @@ const Tutorial = () => {
     };
   }, []);
 
-
-
   // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -130,6 +257,31 @@ const Tutorial = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Reset subdomain when category changes
+    if (name === 'category') {
+      setFormData(prev => ({
+        ...prev,
+        subdomain: ''
+      }));
+    }
+  };
+
+  // Handle edit form input changes
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    
+    // Reset subdomain when category changes
+    if (name === 'category') {
+      setEditFormData(prev => ({
+        ...prev,
+        subdomain: ''
+      }));
+    }
   };
 
   // Handle video type selection
@@ -324,6 +476,7 @@ const Tutorial = () => {
         title: formData.title,
         description: formData.description,
         category: formData.category,
+        subdomain: formData.subdomain || '',
         ...videoData,
         createdBy: currentUser.uid,
         createdByEmail: currentUser.email,
@@ -347,6 +500,7 @@ const Tutorial = () => {
         title: '',
         description: '',
         category: 'Software Engineering',
+        subdomain: '',
         videoType: 'youtube',
         youtubeUrl: '',
         videoFile: null,
@@ -357,6 +511,65 @@ const Tutorial = () => {
     } catch (error) {
       console.error('Error saving tutorial:', error);
       alert('Failed to save tutorial. Please try again.');
+    }
+  };
+
+  // Start editing a tutorial
+  const startEdit = (tutorial) => {
+    setEditingTutorial(tutorial);
+    setEditFormData({
+      title: tutorial.title,
+      description: tutorial.description,
+      category: tutorial.category,
+      subdomain: tutorial.subdomain || ''
+    });
+    setShowEditModal(true);
+  };
+
+  // Cancel editing
+  const cancelEdit = () => {
+    setEditingTutorial(null);
+    setEditFormData({});
+    setShowEditModal(false);
+  };
+
+  // Save edited tutorial
+  const saveEdit = async () => {
+    if (!editFormData.title || !editFormData.category) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      const tutorialRef = doc(db, 'tutorials', editingTutorial.id);
+      await updateDoc(tutorialRef, {
+        title: editFormData.title,
+        description: editFormData.description,
+        category: editFormData.category,
+        subdomain: editFormData.subdomain || '',
+        updatedAt: serverTimestamp()
+      });
+
+      // Update in state
+      setTutorials(prev => prev.map(tutorial => 
+        tutorial.id === editingTutorial.id 
+          ? { 
+              ...tutorial, 
+              title: editFormData.title,
+              description: editFormData.description,
+              category: editFormData.category,
+              subdomain: editFormData.subdomain || '',
+              updatedAt: new Date()
+            } 
+          : tutorial
+      ));
+
+      setEditingTutorial(null);
+      setEditFormData({});
+      setShowEditModal(false);
+    } catch (error) {
+      console.error('Error updating tutorial:', error);
+      alert('Failed to update tutorial. Please try again.');
     }
   };
 
@@ -450,9 +663,111 @@ const Tutorial = () => {
             </button>
           </div>
         )}
+
+      {/* Edit Modal */}
+      {showEditModal && editingTutorial && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-top">
+              <h2>Edit Tutorial</h2>
+              <button 
+                className="close-button"
+                onClick={cancelEdit}
+                aria-label="Close"
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); saveEdit(); }} className="modal-form">
+              <div className="form-group">
+                <label htmlFor="edit-title" className="form-label">Title *</label>
+                <input 
+                  type="text"
+                  id="edit-title"
+                  name="title"
+                  className="form-input"
+                  value={editFormData.title}
+                  onChange={handleEditChange}
+                  placeholder="Enter tutorial title"
+                  required
+                />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="edit-category" className="form-label">Category *</label>
+                  <select
+                    id="edit-category"
+                    name="category"
+                    className="form-select"
+                    value={editFormData.category}
+                    onChange={handleEditChange}
+                    required
+                  >
+                    {Object.keys(categories).map(category => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {editFormData.category && categories[editFormData.category] && (
+                  <div className="form-group">
+                    <label htmlFor="edit-subdomain" className="form-label">Subdomain (Optional)</label>
+                    <select
+                      id="edit-subdomain"
+                      name="subdomain"
+                      className="form-select"
+                      value={editFormData.subdomain}
+                      onChange={handleEditChange}
+                    >
+                      <option value="">Select Subdomain (Optional)</option>
+                      {categories[editFormData.category].map(subdomain => (
+                        <option key={subdomain} value={subdomain}>
+                          {subdomain}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="edit-description" className="form-label">Description</label>
+                <textarea
+                  id="edit-description"
+                  name="description"
+                  className="form-textarea"
+                  value={editFormData.description}
+                  onChange={handleEditChange}
+                  placeholder="Enter tutorial description"
+                  rows="4"
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button 
+                  type="button"
+                  className="cancel-button"
+                  onClick={cancelEdit}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="submit-button"
+                >
+                  Update Tutorial
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       </div>
 
-      {/* Category Filters */}
+      {/* Enhanced Category Filters */}
       <div className="filter-container">
         <button 
           className={`filter-button ${activeCategory === 'All' ? 'active' : ''}`}
@@ -460,12 +775,25 @@ const Tutorial = () => {
         >
           All
         </button>
-        {categories.map(category => (
+        {Object.keys(categories).map(category => (
           <button
             key={category}
             className={`filter-button ${activeCategory === category ? 'active' : ''}`}
             onClick={() => setActiveCategory(category)}
           >
+            {category === 'Software Engineering' ? '💻' :
+             category === 'Data Engineering' ? '📊' :
+             category === 'Web Development' ? '🌐' :
+             category === 'Mobile Development' ? '📱' :
+             category === 'DevOps' ? '⚙️' :
+             category === 'Cloud Computing' ? '☁️' :
+             category === 'IT Support' ? '🛠️' :
+             category === 'Cybersecurity' ? '🔒' :
+             category === 'UX/UI Design' ? '🎨' :
+             category === 'Project Management' ? '📋' :
+             category === 'Linkedin' ? '💼' :
+             category === 'Resume Building' ? '📄' :
+             category === 'Email Writing' ? '✉️' : '📚'}
             {category}
           </button>
         ))}
@@ -498,7 +826,12 @@ const Tutorial = () => {
                     </div>
                   </div>
                   <div className="tutorial-info">
-                    <span className="tutorial-category">{tutorial.category}</span>
+                    <div className="tutorial-tags">
+                      <span className="tutorial-category">{tutorial.category}</span>
+                      {tutorial.subdomain && (
+                        <span className="tutorial-subdomain">{tutorial.subdomain}</span>
+                      )}
+                    </div>
                     <h3 className="tutorial-info-title">{tutorial.title}</h3>
                     <p className="tutorial-description">{tutorial.description}</p>
                   </div>
@@ -508,6 +841,14 @@ const Tutorial = () => {
                     </div>
                     {isAdmin && (
                       <div className="tutorial-actions-menu">
+                        <button 
+                          className="edit-tutorial-btn"
+                          onClick={() => startEdit(tutorial)}
+                          aria-label="Edit"
+                          title="Edit"
+                        >
+                          <Edit size={18} />
+                        </button>
                         <button 
                           className="delete-button"
                           onClick={() => confirmDelete(tutorial.id)}
@@ -576,22 +917,44 @@ const Tutorial = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="category" className="form-label">Category *</label>
-                <select
-                  id="category"
-                  name="category"
-                  className="form-select"
-                  value={formData.category}
-                  onChange={handleChange}
-                  required
-                >
-                  {categories.map(category => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="category" className="form-label">Category *</label>
+                  <select
+                    id="category"
+                    name="category"
+                    className="form-select"
+                    value={formData.category}
+                    onChange={handleChange}
+                    required
+                  >
+                    {Object.keys(categories).map(category => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                {formData.category && categories[formData.category] && (
+                  <div className="form-group">
+                    <label htmlFor="subdomain" className="form-label">Subdomain (Optional)</label>
+                    <select
+                      id="subdomain"
+                      name="subdomain"
+                      className="form-select"
+                      value={formData.subdomain}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Subdomain (Optional)</option>
+                      {categories[formData.category].map(subdomain => (
+                        <option key={subdomain} value={subdomain}>
+                          {subdomain}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
               <div className="form-group">
@@ -783,4 +1146,4 @@ const Tutorial = () => {
   );
 };
 
-export default Tutorial;
+export default Tutorial

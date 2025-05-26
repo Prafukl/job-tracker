@@ -1,4 +1,4 @@
-/* TutorialStyles.js - Styles for the Tutorial component */
+/* TutorialStyles.js - Enhanced styles for the Tutorial component */
 export const addTutorialStyles = () => {
   const styleElement = document.createElement('style');
   styleElement.innerHTML = `
@@ -143,15 +143,33 @@ export const addTutorialStyles = () => {
       padding: 16px;
     }
     
+    /* Enhanced Tutorial Tags */
+    .tutorial-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    
     .tutorial-category {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 4px 12px;
       background-color: #e0e7ff;
       color: #4338ca;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 600;
-      margin-bottom: 8px;
+    }
+    
+    .tutorial-subdomain {
+      display: inline-block;
+      padding: 4px 12px;
+      background-color: #f0fdf4;
+      color: #16a34a;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid #bbf7d0;
     }
     
     .tutorial-info-title {
@@ -188,7 +206,24 @@ export const addTutorialStyles = () => {
     
     .tutorial-actions-menu {
       display: flex;
-      gap: 10px;
+      gap: 8px;
+    }
+    
+    .edit-tutorial-btn {
+      background: none;
+      border: none;
+      color: #4a6cf7;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .edit-tutorial-btn:hover {
+      background-color: #f0f5ff;
     }
     
     .delete-button {
@@ -196,13 +231,203 @@ export const addTutorialStyles = () => {
       border: none;
       color: #ef4444;
       cursor: pointer;
-      padding: 5px;
-      border-radius: 5px;
+      padding: 6px;
+      border-radius: 6px;
       transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .delete-button:hover {
-      background-color: #fee2e2;
+      background-color: #fef2f2;
+    }
+    
+    /* Tutorial Edit Form Styles */
+    .tutorial-edit-form {
+      padding: 24px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 2px solid #4a6cf7;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(74, 108, 247, 0.15);
+      position: relative;
+      min-height: 400px;
+    }
+    
+    .edit-form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e2e8f0;
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .edit-form-header h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .edit-form-header h3::before {
+      content: "✏️";
+      font-size: 18px;
+    }
+    
+    .edit-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .save-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .save-btn:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+    
+    .cancel-btn {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .cancel-btn:hover {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+    }
+    
+    .edit-form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: end;
+    }
+    
+    .form-row .form-group {
+      margin: 0;
+    }
+    
+    /* Special styling for category and subdomain labels */
+    .form-group label[for="category"]::before,
+    .form-group label:has(+ select[name="category"])::before {
+      content: "📂";
+    }
+    
+    .form-group label[for="subdomain"]::before,
+    .form-group label:has(+ select[name="subdomain"])::before {
+      content: "🏷️";
+    }
+    
+    .form-group label:has(+ textarea)::before {
+      content: "📄";
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #374155;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .form-group label::before {
+      content: "📝";
+      font-size: 12px;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      background: #ffffff;
+      font-family: inherit;
+    }
+    
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: #4a6cf7;
+      box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+    
+    .form-select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 12px center;
+      background-repeat: no-repeat;
+      background-size: 16px;
+      padding-right: 40px;
+      appearance: none;
     }
     
     /* Modal Styles */
@@ -270,36 +495,12 @@ export const addTutorialStyles = () => {
       padding: 20px;
     }
     
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
     .form-label {
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
       color: #334155;
       font-size: 14px;
-    }
-    
-    .form-input, .form-textarea, .form-select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: border-color 0.2s ease;
-    }
-    
-    .form-input:focus, .form-textarea:focus, .form-select:focus {
-      outline: none;
-      border-color: #4a6cf7;
-      box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
-    }
-    
-    .form-textarea {
-      min-height: 100px;
-      resize: vertical;
     }
     
     .type-selector {
@@ -457,7 +658,8 @@ export const addTutorialStyles = () => {
       background-color: white;
     }
     
-    .cancel-button, .submit-button {
+    .cancel-button,
+    .submit-button {
       padding: 10px 20px;
       border-radius: 8px;
       font-weight: 500;
@@ -607,7 +809,7 @@ export const addTutorialStyles = () => {
       }
       
       .tutorials-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       }
       
       .modal-content {
@@ -623,14 +825,138 @@ export const addTutorialStyles = () => {
         gap: 10px;
       }
       
-      .cancel-button, .submit-button {
+      .cancel-button,
+      .submit-button {
         width: 100%;
+      }
+      
+      .form-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      
+      .edit-form-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      
+      .edit-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .tutorial-container {
+        padding: 16px;
+      }
+      
+      .tutorial-header {
+        gap: 12px;
+      }
+      
+      .tutorial-title {
+        font-size: 1.5rem;
+      }
+      
+      .tutorials-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tutorial-edit-form {
+        padding: 16px;
+      }
+      
+      .tutorial-tags {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      
+      .modal-top {
+        padding: 16px;
+      }
+      
+      .modal-form {
+        padding: 16px;
+      }
+      
+      .modal-actions {
+        padding: 16px;
+      }
+    }
+    
+    /* Animation for smooth transitions */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .tutorial-edit-form {
+      animation: slideIn 0.4s ease-out;
+    }
+    
+    /* Hover effects for better interaction */
+    .tutorial-card:not(:has(.tutorial-edit-form)):hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    .tutorial-card:has(.tutorial-edit-form) {
+      transform: none !important;
+      box-shadow: 0 12px 30px rgba(74, 108, 247, 0.2) !important;
+    }
+    
+    /* Focus states for accessibility */
+    .upload-button:focus,
+    .filter-button:focus,
+    .edit-tutorial-btn:focus,
+    .delete-button:focus,
+    .save-btn:focus,
+    .cancel-btn:focus,
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: 2px solid #4a6cf7;
+      outline-offset: 2px;
+    }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      .tutorial-card {
+        border: 2px solid #000;
+      }
+      
+      .tutorial-edit-form {
+        border-width: 3px;
+      }
+    }
+    
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
   `;
   document.head.appendChild(styleElement);
   
   return () => {
-    document.head.removeChild(styleElement);
+    if (document.head.contains(styleElement)) {
+      document.head.removeChild(styleElement);
+    }
   };
 };

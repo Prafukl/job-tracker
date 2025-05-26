@@ -8,6 +8,7 @@ import Notes from './component/Notes';
 import Knowledge from './component/Knowledge';
 import Tutorial from './component/Tutorial';
 import InterviewPrep from './component/InterviewPrep';
+import CompanyDirectory from './component/CompanyDirectory'; // Add this import
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -105,9 +106,13 @@ const AppRouter = () => {
           element: <ProtectedRoute><Tutorial /></ProtectedRoute>,
         },
         {
-  path: "interview-prep",
-  element: <ProtectedRoute><InterviewPrep /></ProtectedRoute>,
-}
+          path: "interview-prep",
+          element: <ProtectedRoute><InterviewPrep /></ProtectedRoute>,
+        },
+        {
+          path: "companies", // Add the new Company Directory route
+          element: <CompanyDirectory />, // Note: Not protected, visible to all users
+        }
       ],
     },
   ]);

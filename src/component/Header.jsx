@@ -1,7 +1,7 @@
 // src/component/Header.jsx - Enhanced with Okta-style dropdowns
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React, { useState, useEffect } from 'react'; // Add React and hooks
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Add router components
+import { useAuth } from '../context/AuthContext'; // Add auth context
 import { 
   Menu, 
   X, 
@@ -17,6 +17,7 @@ import {
   Lightbulb,
   Play,
   Calendar,
+  Building2  // Add Building2 for Company Directory
 } from 'lucide-react';
 import '../Header.css';
 
@@ -41,52 +42,58 @@ const Header = () => {
   
   // Enhanced navigation items with categories and dropdowns
   const navigationCategories = {
-    'Applications': {
-      icon: <Briefcase size={16} />,
-      items: [
-        {
-          path: '/joblist',
-          label: 'All Applications',
-          description: 'View and manage all your job applications',
-          icon: <FileText size={16} />
-        }
-      ]
-    },
-    'Learning': {
-      icon: <BookOpen size={16} />,
-      items: [
-        {
-          path: '/tutorials',
-          label: 'Video Tutorials',
-          description: 'Watch helpful career development videos',
-          icon: <Play size={16} />
-        },
-        {
-          path: '/knowledge',
-          label: 'Knowledge Tools',
-          description: 'Access useful career tools and resources',
-          icon: <Lightbulb size={16} />
-        },
-        {
-          path: '/interview-prep',
-          label: 'Interview Prep',
-          description: 'Practice with custom question sets',
-          icon: <Target size={16} />
-        }
-      ]
-    },
-    'Organization': {
-      icon: <Calendar size={16} />,
-      items: [
-        {
-          path: '/notes',
-          label: 'Notes',
-          description: 'Keep track of important information',
-          icon: <FileText size={16} />
-        }
-      ]
-    }
-  };
+  'Applications': {
+    icon: <Briefcase size={16} />,
+    items: [
+      {
+        path: '/joblist',
+        label: 'All Applications',
+        description: 'View and manage all your job applications',
+        icon: <FileText size={16} />
+      }
+    ]
+  },
+  'Learning': {
+    icon: <BookOpen size={16} />,
+    items: [
+      {
+        path: '/tutorials',
+        label: 'Video Tutorials',
+        description: 'Watch helpful career development videos',
+        icon: <Play size={16} />
+      },
+      {
+        path: '/knowledge',
+        label: 'Knowledge Tools',
+        description: 'Access useful career tools and resources',
+        icon: <Lightbulb size={16} />
+      },
+      {
+        path: '/interview-prep',
+        label: 'Interview Prep',
+        description: 'Practice with custom question sets',
+        icon: <Target size={16} />
+      }
+    ]
+  },
+  'Organization': {
+    icon: <Calendar size={16} />,
+    items: [
+      {
+        path: '/notes',
+        label: 'Notes',
+        description: 'Keep track of important information',
+        icon: <FileText size={16} />
+      },
+      {
+        path: '/companies',
+        label: 'Company Directory',
+        description: 'Browse companies and career opportunities',
+        icon: <Building2 size={16} />
+      }
+    ]
+  }
+};
 
   // Navigation items that don't need dropdowns
   const simpleNavItems = [
