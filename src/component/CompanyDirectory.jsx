@@ -22,7 +22,6 @@ import {
   Globe,
   Briefcase,
   X,
-  Save,
   Search,
   Filter,
   MapPin,
