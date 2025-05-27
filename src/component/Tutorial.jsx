@@ -28,11 +28,10 @@ import {
   Trash2, 
   Plus,
   Edit,
-  
+  Image
 } from 'lucide-react';
 import { addTutorialStyles } from './TutorialStyles';
 
-// Tutorial Component
 const Tutorial = () => {
   const { currentUser } = useAuth();
   const [tutorials, setTutorials] = useState([]);
@@ -43,144 +42,13 @@ const Tutorial = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [tutorialToDelete, setTutorialToDelete] = useState(null);
   const [editingTutorial, setEditingTutorial] = useState(null);
-  const [editFormData, setEditFormData] = useState({});
-  
-  // Enhanced categories with subdomains
-  const categories = {
-    'Software Engineering': [
-      'Full Stack Development',
-      'Backend Development', 
-      'Frontend Development',
-      'Mobile Development',
-      'Game Development',
-      'API Development',
-      'Microservices',
-      'Software Architecture'
-    ],
-    'Data Engineering': [
-      'ETL Pipelines',
-      'Data Warehousing',
-      'Big Data',
-      'Stream Processing',
-      'Data Lake',
-      'Apache Spark',
-      'Kafka',
-      'Airflow'
-    ],
-    'Web Development': [
-      'React.js',
-      'Angular',
-      'Vue.js',
-      'Node.js',
-      'Django',
-      'Laravel',
-      'WordPress',
-      'E-commerce'
-    ],
-    'Mobile Development': [
-      'React Native',
-      'Flutter',
-      'iOS Development',
-      'Android Development',
-      'Xamarin',
-      'Ionic',
-      'Progressive Web Apps'
-    ],
-    'DevOps': [
-      'CI/CD',
-      'Docker',
-      'Kubernetes',
-      'Infrastructure as Code',
-      'Monitoring',
-      'GitOps',
-      'Configuration Management'
-    ],
-    'Cloud Computing': [
-      'AWS',
-      'Azure',
-      'Google Cloud',
-      'Serverless',
-      'virtualization',
-      'Containerization',
-      'Cloud Security',
-      'Multi-cloud'
-    ],
-    'IT Support': [
-      'Help Desk',
-      'System Administration',
-      'Network Troubleshooting',
-      'Hardware Support',
-      'Software Installation',
-      'User Training'
-    ],
-    'Cybersecurity': [
-      'Penetration Testing',
-      'Network Security',
-      'Application Security',
-      'Cloud Security',
-      'Incident Response',
-      'Compliance',
-      'Threat Intelligence'
-    ],
-    'UX/UI Design': [
-      'User Research',
-      'Wireframing',
-      'Prototyping',
-      'Visual Design',
-      'Interaction Design',
-      'Design Systems',
-      'Usability Testing'
-    ],
-
-    'Computer Hardware' :[
-      'UPS',
-      'SMPS',
-      'CPU',
-      'GPU',
-      'Motherboard',
-      'Mointer',
-      'cmos battery'
-    
-       
-    ],
-    
-    'Project Management': [
-      'Agile/Scrum',
-      'Waterfall',
-      'Risk Management',
-      'Stakeholder Management',
-      'Budget Management',
-      'Team Leadership'
-    ],
-    'Linkedin': [
-      'Profile Optimization',
-      'Networking',
-      'Job Search',
-      'Content Strategy',
-      'Personal Branding',
-      'LinkedIn Ads'
-    ],
-    'Resume Building': [
-      'ATS Optimization',
-      'Cover Letters',
-      'Portfolio Development',
-      'Industry-Specific Resumes',
-      'Interview Preparation'
-    ],
-    'Networking' :[
-      'Basic Concepts'
-
-    ],
-
-    'Email Writing': [
-      'Professional Communication',
-      'Follow-up Emails',
-      'Cold Outreach',
-      'Email Etiquette',
-      'Networking Emails'
-    ]
-  };
-
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    subdomain: '',
+    thumbnailFile: null
+  });
   const [activeCategory, setActiveCategory] = useState('All');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
@@ -192,14 +60,76 @@ const Tutorial = () => {
     videoType: 'youtube',
     youtubeUrl: '',
     videoFile: null,
+    thumbnailFile: null,
     videoUrl: '',
-    thumbnailUrl: '',
+    thumbnailUrl: ''
   });
-  
+
   const fileInputRef = useRef(null);
+  const thumbnailInputRef = useRef(null);
+  const editThumbnailInputRef = useRef(null);
   const storage = getStorage();
 
-  // Check if user is admin
+  const categories = {
+    'Software Engineering': [
+      'Full Stack Development', 'Backend Development', 'Frontend Development',
+      'Mobile Development', 'Game Development', 'API Development',
+      'Microservices', 'Software Architecture'
+    ],
+    'Data Engineering': [
+      'ETL Pipelines', 'Data Warehousing', 'Big Data', 'Stream Processing',
+      'Data Lake', 'Apache Spark', 'Kafka', 'Airflow'
+    ],
+    'Web Development': [
+      'React.js', 'Angular', 'Vue.js', 'Node.js', 'Django', 'Laravel',
+      'WordPress', 'E-commerce'
+    ],
+    'Mobile Development': [
+      'React Native', 'Flutter', 'iOS Development', 'Android Development',
+      'Xamarin', 'Ionic', 'Progressive Web Apps'
+    ],
+    'DevOps': [
+      'CI/CD', 'Docker', 'Kubernetes', 'Infrastructure as Code',
+      'Monitoring', 'GitOps', 'Configuration Management'
+    ],
+    'Cloud Computing': [
+      'AWS', 'Azure', 'Google Cloud', 'Serverless', 'Virtualization',
+      'Containerization', 'Cloud Security', 'Multi-cloud'
+    ],
+    'IT Support': [
+      'Help Desk', 'System Administration', 'Network Troubleshooting',
+      'Hardware Support', 'Software Installation', 'User Training'
+    ],
+    'Cybersecurity': [
+      'Penetration Testing', 'Network Security', 'Application Security',
+      'Cloud Security', 'Incident Response', 'Compliance', 'Threat Intelligence'
+    ],
+    'UX/UI Design': [
+      'User Research', 'Wireframing', 'Prototyping', 'Visual Design',
+      'Interaction Design', 'Design Systems', 'Usability Testing'
+    ],
+    'Computer Hardware': [
+      'UPS', 'SMPS', 'CPU', 'GPU', 'Motherboard', 'Monitor', 'CMOS Battery'
+    ],
+    'Project Management': [
+      'Agile/Scrum', 'Waterfall', 'Risk Management', 'Stakeholder Management',
+      'Budget Management', 'Team Leadership'
+    ],
+    'Linkedin': [
+      'Profile Optimization', 'Networking', 'Job Search', 'Content Strategy',
+      'Personal Branding', 'LinkedIn Ads'
+    ],
+    'Resume Building': [
+      'ATS Optimization', 'Cover Letters', 'Portfolio Development',
+      'Industry-Specific Resumes', 'Interview Preparation'
+    ],
+    'Networking': ['Basic Concepts'],
+    'Email Writing': [
+      'Professional Communication', 'Follow-up Emails', 'Cold Outreach',
+      'Email Etiquette', 'Networking Emails'
+    ]
+  };
+
   useEffect(() => {
     if (currentUser && currentUser.email === 'admin@gmail.com') {
       setIsAdmin(true);
@@ -208,19 +138,13 @@ const Tutorial = () => {
     }
   }, [currentUser]);
 
-  // Fetch tutorials from Firestore
   useEffect(() => {
     const fetchTutorials = async () => {
       try {
         setLoading(true);
         const tutorialsRef = collection(db, 'tutorials');
-        const q = query(
-          tutorialsRef, 
-          orderBy('createdAt', 'desc')
-        );
-        
+        const q = query(tutorialsRef, orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
-        
         const fetchedTutorials = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
@@ -230,7 +154,6 @@ const Tutorial = () => {
             createdAt: data.createdAt?.toDate?.() || new Date()
           });
         });
-        
         setTutorials(fetchedTutorials);
       } catch (error) {
         console.error('Error fetching tutorials:', error);
@@ -238,166 +161,183 @@ const Tutorial = () => {
         setLoading(false);
       }
     };
-
     fetchTutorials();
-    
-    // Add custom styles
     const removeStyles = addTutorialStyles();
-    
-    // Cleanup
     return () => {
       if (removeStyles) removeStyles();
     };
   }, []);
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
+      ...(name === 'category' ? { subdomain: '' } : {})
     }));
-    
-    // Reset subdomain when category changes
-    if (name === 'category') {
-      setFormData(prev => ({
-        ...prev,
-        subdomain: ''
-      }));
-    }
   };
 
-  // Handle edit form input changes
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
+      ...(name === 'category' ? { subdomain: '' } : {})
     }));
-    
-    // Reset subdomain when category changes
-    if (name === 'category') {
-      setEditFormData(prev => ({
-        ...prev,
-        subdomain: ''
-      }));
-    }
   };
 
-  // Handle video type selection
   const handleVideoTypeChange = (type) => {
     setFormData(prev => ({
       ...prev,
       videoType: type,
       videoFile: null,
+      thumbnailFile: null,
       videoUrl: '',
-      youtubeUrl: ''
+      youtubeUrl: '',
+      thumbnailUrl: ''
     }));
   };
 
-  // Handle video file selection
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
-    // Check file type
     const validTypes = ['video/mp4', 'video/webm', 'video/ogg'];
     if (!validTypes.includes(file.type)) {
       alert('Please select a valid video file (MP4, WebM, or OGG)');
       return;
     }
-    
-    // Check file size (100MB max)
     if (file.size > 100 * 1024 * 1024) {
       alert('File size exceeds 100MB limit. Please select a smaller file or use YouTube embed.');
       return;
     }
-    
-    setFormData(prev => ({
-      ...prev,
-      videoFile: file
-    }));
+    setFormData(prev => ({ ...prev, videoFile: file }));
   };
 
-  // Format file size
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!validTypes.includes(file.type)) {
+      alert('Please select a valid image file (JPEG, PNG, or JPG)');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Thumbnail size exceeds 5MB limit. Please select a smaller image.');
+      return;
+    }
+    setFormData(prev => ({ ...prev, thumbnailFile: file }));
+  };
+
+  const handleEditThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!validTypes.includes(file.type)) {
+      alert('Please select a valid image file (JPEG, PNG, or JPG)');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Thumbnail size exceeds 5MB limit. Please select a smaller image.');
+      return;
+    }
+    setEditFormData(prev => ({ ...prev, thumbnailFile: file }));
+  };
+
   const formatFileSize = (sizeInBytes) => {
-    if (sizeInBytes < 1024) {
-      return sizeInBytes + ' bytes';
-    } else if (sizeInBytes < 1024 * 1024) {
-      return (sizeInBytes / 1024).toFixed(1) + ' KB';
-    } else {
-      return (sizeInBytes / (1024 * 1024)).toFixed(1) + ' MB';
+    if (sizeInBytes < 1024) return sizeInBytes + ' bytes';
+    else if (sizeInBytes < 1024 * 1024) return (sizeInBytes / 1024).toFixed(1) + ' KB';
+    else return (sizeInBytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
+  const removeSelectedFile = (type) => {
+    if (type === 'videoFile') {
+      setFormData(prev => ({ ...prev, videoFile: null }));
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    } else if (type === 'thumbnailFile') {
+      setFormData(prev => ({ ...prev, thumbnailFile: null }));
+      if (thumbnailInputRef.current) thumbnailInputRef.current.value = '';
+    } else if (type === 'editThumbnailFile') {
+      setEditFormData(prev => ({ ...prev, thumbnailFile: null }));
+      if (editThumbnailInputRef.current) editThumbnailInputRef.current.value = '';
     }
   };
 
-  // Remove selected file
-  const removeSelectedFile = () => {
-    setFormData(prev => ({
-      ...prev,
-      videoFile: null
-    }));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  // Extract YouTube video ID from URL
   const extractYoutubeId = (url) => {
     if (!url) return null;
-    
-    // Regular expressions for different YouTube URL formats
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
-    
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
-  // Generate YouTube thumbnail URL
   const getYoutubeThumbnail = (videoId) => {
     return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   };
 
-  // Upload video to Firebase Storage
-  const uploadVideo = async () => {
-    if (!formData.videoFile) return null;
-    
+  const uploadThumbnail = async (file) => {
+    if (!file) return null;
     try {
-      setUploading(true);
-      
-      // Create a reference to the storage location
       const timestamp = Date.now();
-      const filename = formData.videoFile.name.replace(/[^a-zA-Z0-9.]/g, '_');
-      const storagePath = `tutorials/videos/${timestamp}_${filename}`;
+      const filename = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+      const storagePath = `tutorials/thumbnails/${timestamp}_${filename}`;
       const storageRef = ref(storage, storagePath);
-      
-      // Upload file with progress tracking
-      const uploadTask = uploadBytesResumable(storageRef, formData.videoFile);
-      
+      const uploadTask = uploadBytesResumable(storageRef, file);
       return new Promise((resolve, reject) => {
         uploadTask.on(
           'state_changed',
           (snapshot) => {
-            // Track upload progress
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             setUploadProgress(progress);
           },
           (error) => {
-            console.error('Upload error:', error);
+            console.error('Thumbnail upload error:', error);
+            reject(error);
+          },
+          async () => {
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve({ url: downloadURL, path: storagePath });
+            } catch (error) {
+              console.error('Error getting thumbnail download URL:', error);
+              reject(error);
+            }
+          }
+        );
+      });
+    } catch (error) {
+      console.error('Thumbnail upload setup error:', error);
+      return null;
+    }
+  };
+
+  const uploadVideo = async () => {
+    if (!formData.videoFile) return null;
+    try {
+      setUploading(true);
+      const timestamp = Date.now();
+      const filename = formData.videoFile.name.replace(/[^a-zA-Z0-9.]/g, '_');
+      const storagePath = `tutorials/videos/${timestamp}_${filename}`;
+      const storageRef = ref(storage, storagePath);
+      const uploadTask = uploadBytesResumable(storageRef, formData.videoFile);
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setUploadProgress(progress);
+          },
+          (error) => {
+            console.error('Video upload error:', error);
             setUploading(false);
             reject(error);
           },
           async () => {
-            // Upload completed successfully
             try {
               const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
               setUploading(false);
               setUploadProgress(0);
-              resolve({
-                url: downloadURL,
-                path: storagePath
-              });
+              resolve({ url: downloadURL, path: storagePath });
             } catch (error) {
-              console.error('Error getting download URL:', error);
+              console.error('Error getting video download URL:', error);
               setUploading(false);
               reject(error);
             }
@@ -405,33 +345,27 @@ const Tutorial = () => {
         );
       });
     } catch (error) {
-      console.error('Upload setup error:', error);
+      console.error('Video upload setup error:', error);
       setUploading(false);
       return null;
     }
   };
 
-  // Save tutorial to Firestore
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!currentUser || !isAdmin) {
       alert('Only admin users can upload tutorials');
       return;
     }
-    
     if (!formData.title || !formData.category) {
       alert('Please fill in all required fields');
       return;
     }
-    
-    // Validate based on video type
     if (formData.videoType === 'youtube') {
       if (!formData.youtubeUrl) {
         alert('Please enter a YouTube URL');
         return;
       }
-      
       const videoId = extractYoutubeId(formData.youtubeUrl);
       if (!videoId) {
         alert('Invalid YouTube URL. Please enter a valid YouTube video URL');
@@ -442,36 +376,36 @@ const Tutorial = () => {
         alert('Please select a video file to upload');
         return;
       }
+      if (!formData.thumbnailFile) {
+        alert('Please select a thumbnail image for the video');
+        return;
+      }
     }
-    
     try {
-      // Process video based on type
+      setUploading(true);
       let videoData = {
         videoType: formData.videoType,
         videoUrl: '',
         thumbnailUrl: '',
-        storagePath: ''
+        storagePath: '',
+        thumbnailStoragePath: ''
       };
-      
       if (formData.videoType === 'youtube') {
         const videoId = extractYoutubeId(formData.youtubeUrl);
         videoData.videoUrl = `https://www.youtube.com/embed/${videoId}`;
         videoData.thumbnailUrl = getYoutubeThumbnail(videoId);
       } else if (formData.videoType === 'file') {
-        // Upload video file
-        const uploadResult = await uploadVideo();
-        if (uploadResult) {
-          videoData.videoUrl = uploadResult.url;
-          videoData.storagePath = uploadResult.path;
-          // For a custom thumbnail, you could upload that separately
-          // For now, we'll just use a placeholder
-          videoData.thumbnailUrl = 'https://via.placeholder.com/640x360?text=Video+Tutorial';
+        const videoUploadResult = await uploadVideo();
+        const thumbnailUploadResult = await uploadThumbnail(formData.thumbnailFile);
+        if (videoUploadResult && thumbnailUploadResult) {
+          videoData.videoUrl = videoUploadResult.url;
+          videoData.storagePath = videoUploadResult.path;
+          videoData.thumbnailUrl = thumbnailUploadResult.url;
+          videoData.thumbnailStoragePath = thumbnailUploadResult.path;
         } else {
-          throw new Error('Failed to upload video');
+          throw new Error('Failed to upload video or thumbnail');
         }
       }
-      
-      // Save to Firestore
       const tutorialData = {
         title: formData.title,
         description: formData.description,
@@ -482,19 +416,12 @@ const Tutorial = () => {
         createdByEmail: currentUser.email,
         createdAt: serverTimestamp()
       };
-      
       const docRef = await addDoc(collection(db, 'tutorials'), tutorialData);
-      
-      // Add to state with client-side timestamp for immediate display
-      const newTutorial = {
+      setTutorials(prev => [{
         ...tutorialData,
         id: docRef.id,
         createdAt: new Date()
-      };
-      
-      setTutorials(prev => [newTutorial, ...prev]);
-      
-      // Close modal and reset form
+      }, ...prev]);
       setShowUploadModal(false);
       setFormData({
         title: '',
@@ -504,76 +431,97 @@ const Tutorial = () => {
         videoType: 'youtube',
         youtubeUrl: '',
         videoFile: null,
+        thumbnailFile: null,
         videoUrl: '',
-        thumbnailUrl: '',
+        thumbnailUrl: ''
       });
-      
     } catch (error) {
       console.error('Error saving tutorial:', error);
       alert('Failed to save tutorial. Please try again.');
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
     }
   };
 
-  // Start editing a tutorial
   const startEdit = (tutorial) => {
     setEditingTutorial(tutorial);
     setEditFormData({
       title: tutorial.title,
       description: tutorial.description,
       category: tutorial.category,
-      subdomain: tutorial.subdomain || ''
+      subdomain: tutorial.subdomain || '',
+      thumbnailFile: null
     });
     setShowEditModal(true);
   };
 
-  // Cancel editing
   const cancelEdit = () => {
     setEditingTutorial(null);
     setEditFormData({});
     setShowEditModal(false);
   };
 
-  // Save edited tutorial
   const saveEdit = async () => {
     if (!editFormData.title || !editFormData.category) {
       alert('Please fill in all required fields');
       return;
     }
-
     try {
+      setUploading(true);
       const tutorialRef = doc(db, 'tutorials', editingTutorial.id);
-      await updateDoc(tutorialRef, {
+      let updateData = {
         title: editFormData.title,
         description: editFormData.description,
         category: editFormData.category,
         subdomain: editFormData.subdomain || '',
         updatedAt: serverTimestamp()
-      });
+      };
 
-      // Update in state
+      if (editFormData.thumbnailFile) {
+        if (editingTutorial.videoType === 'file' && editingTutorial.thumbnailStoragePath) {
+          try {
+            const oldThumbnailRef = ref(storage, editingTutorial.thumbnailStoragePath);
+            await deleteObject(oldThumbnailRef);
+          } catch (error) {
+            console.error('Error deleting old thumbnail:', error);
+          }
+        }
+        
+        const thumbnailUploadResult = await uploadThumbnail(editFormData.thumbnailFile);
+        if (thumbnailUploadResult) {
+          updateData.thumbnailUrl = thumbnailUploadResult.url;
+          updateData.thumbnailStoragePath = thumbnailUploadResult.path;
+        } else {
+          throw new Error('Failed to upload new thumbnail');
+        }
+      } else if (editingTutorial.videoType === 'youtube') {
+        const videoId = extractYoutubeId(editingTutorial.videoUrl);
+        updateData.thumbnailUrl = getYoutubeThumbnail(videoId);
+      }
+
+      await updateDoc(tutorialRef, updateData);
       setTutorials(prev => prev.map(tutorial => 
         tutorial.id === editingTutorial.id 
           ? { 
               ...tutorial, 
-              title: editFormData.title,
-              description: editFormData.description,
-              category: editFormData.category,
-              subdomain: editFormData.subdomain || '',
+              ...updateData,
               updatedAt: new Date()
             } 
           : tutorial
       ));
-
       setEditingTutorial(null);
       setEditFormData({});
       setShowEditModal(false);
     } catch (error) {
       console.error('Error updating tutorial:', error);
       alert('Failed to update tutorial. Please try again.');
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
     }
   };
 
-  // Delete tutorial
   const confirmDelete = (id) => {
     setTutorialToDelete(id);
     setShowDeleteModal(true);
@@ -581,29 +529,28 @@ const Tutorial = () => {
 
   const handleDelete = async () => {
     if (!currentUser || !isAdmin || !tutorialToDelete) return;
-
     try {
-      // Find the tutorial to delete
       const tutorialToDeleteObj = tutorials.find(tut => tut.id === tutorialToDelete);
-      
-      // If it's a file upload, delete from storage
-      if (tutorialToDeleteObj && tutorialToDeleteObj.videoType === 'file' && tutorialToDeleteObj.storagePath) {
-        try {
-          const fileRef = ref(storage, tutorialToDeleteObj.storagePath);
-          await deleteObject(fileRef);
-        } catch (error) {
-          console.error('Error deleting video file:', error);
-          // Continue with tutorial deletion even if file deletion fails
+      if (tutorialToDeleteObj && tutorialToDeleteObj.videoType === 'file') {
+        if (tutorialToDeleteObj.storagePath) {
+          try {
+            const videoRef = ref(storage, tutorialToDeleteObj.storagePath);
+            await deleteObject(videoRef);
+          } catch (error) {
+            console.error('Error deleting video file:', error);
+          }
+        }
+        if (tutorialToDeleteObj.thumbnailStoragePath) {
+          try {
+            const thumbnailRef = ref(storage, tutorialToDeleteObj.thumbnailStoragePath);
+            await deleteObject(thumbnailRef);
+          } catch (error) {
+            console.error('Error deleting thumbnail file:', error);
+          }
         }
       }
-      
-      // Delete from Firestore
       await deleteDoc(doc(db, 'tutorials', tutorialToDelete));
-      
-      // Remove from state
       setTutorials(prev => prev.filter(tut => tut.id !== tutorialToDelete));
-      
-      // Close modal
       setShowDeleteModal(false);
       setTutorialToDelete(null);
     } catch (error) {
@@ -617,29 +564,17 @@ const Tutorial = () => {
     setTutorialToDelete(null);
   };
 
-  // Format date for display
   const formatDate = (date) => {
     if (!date) return '';
-    
     return date instanceof Date 
-      ? date.toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric' 
-        })
-      : new Date(date).toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric' 
-        });
+      ? date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+      : new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  // Filter tutorials by category
   const filteredTutorials = activeCategory === 'All' 
     ? tutorials 
     : tutorials.filter(tutorial => tutorial.category === activeCategory);
 
-  // Play video
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(null);
 
@@ -663,8 +598,8 @@ const Tutorial = () => {
             </button>
           </div>
         )}
+      </div>
 
-      {/* Edit Modal */}
       {showEditModal && editingTutorial && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -692,7 +627,6 @@ const Tutorial = () => {
                   required
                 />
               </div>
-
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="edit-category" className="form-label">Category *</label>
@@ -705,13 +639,10 @@ const Tutorial = () => {
                     required
                   >
                     {Object.keys(categories).map(category => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
+                      <option key={category} value={category}>{category}</option>
                     ))}
                   </select>
                 </div>
-                
                 {editFormData.category && categories[editFormData.category] && (
                   <div className="form-group">
                     <label htmlFor="edit-subdomain" className="form-label">Subdomain (Optional)</label>
@@ -724,15 +655,12 @@ const Tutorial = () => {
                     >
                       <option value="">Select Subdomain (Optional)</option>
                       {categories[editFormData.category].map(subdomain => (
-                        <option key={subdomain} value={subdomain}>
-                          {subdomain}
-                        </option>
+                        <option key={subdomain} value={subdomain}>{subdomain}</option>
                       ))}
                     </select>
                   </div>
                 )}
               </div>
-
               <div className="form-group">
                 <label htmlFor="edit-description" className="form-label">Description</label>
                 <textarea
@@ -745,29 +673,73 @@ const Tutorial = () => {
                   rows="4"
                 />
               </div>
-
+              <div className="form-group">
+                <label className="form-label">Thumbnail Image (Optional)</label>
+                {editFormData.thumbnailFile ? (
+                  <div className="file-preview">
+                    <Image className="file-preview-icon" size={24} />
+                    <div className="file-preview-info">
+                      <div className="file-preview-name">{editFormData.thumbnailFile.name}</div>
+                      <div className="file-preview-size">{formatFileSize(editFormData.thumbnailFile.size)}</div>
+                    </div>
+                    <button 
+                      type="button"
+                      className="file-preview-remove"
+                      onClick={() => removeSelectedFile('editThumbnailFile')}
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <img 
+                      src={editingTutorial.thumbnailUrl} 
+                      alt="Current thumbnail"
+                      className="current-thumbnail"
+                      style={{ maxWidth: '200px', marginBottom: '10px' }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://via.placeholder.com/200x112?text=Thumbnail';
+                      }}
+                    />
+                    <label className="file-upload-input-container">
+                      <Upload className="file-upload-icon" size={30} />
+                      <span className="file-upload-text">Click to upload or drag and drop new thumbnail</span>
+                      <span className="file-upload-hint">JPEG, PNG or JPG (Max 5MB)</span>
+                      <input 
+                        type="file"
+                        className="file-upload-input"
+                        onChange={handleEditThumbnailChange}
+                        accept="image/jpeg,image/png,image/jpg"
+                        ref={editThumbnailInputRef}
+                      />
+                    </label>
+                  </>
+                )}
+                {uploading && (
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-bar-fill" 
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                )}
+              </div>
               <div className="modal-actions">
+                <button type="button" className="cancel-button" onClick={cancelEdit}>Cancel</button>
                 <button 
-                  type="button"
-                  className="cancel-button"
-                  onClick={cancelEdit}
+                  type="submit" 
+                  className="submit-button" 
+                  disabled={uploading}
                 >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="submit-button"
-                >
-                  Update Tutorial
+                  {uploading ? `Uploading ${Math.round(uploadProgress)}%` : 'Update Tutorial'}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-      </div>
 
-      {/* Enhanced Category Filters */}
       <div className="filter-container">
         <button 
           className={`filter-button ${activeCategory === 'All' ? 'active' : ''}`}
@@ -836,9 +808,7 @@ const Tutorial = () => {
                     <p className="tutorial-description">{tutorial.description}</p>
                   </div>
                   <div className="tutorial-footer">
-                    <div className="tutorial-date">
-                      {formatDate(tutorial.createdAt)}
-                    </div>
+                    <div className="tutorial-date">{formatDate(tutorial.createdAt)}</div>
                     {isAdmin && (
                       <div className="tutorial-actions-menu">
                         <button 
@@ -888,7 +858,6 @@ const Tutorial = () => {
         </>
       )}
 
-      {/* Upload Modal */}
       {showUploadModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -916,7 +885,6 @@ const Tutorial = () => {
                   required
                 />
               </div>
-
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="category" className="form-label">Category *</label>
@@ -929,13 +897,10 @@ const Tutorial = () => {
                     required
                   >
                     {Object.keys(categories).map(category => (
-                      <option key={category} value={category}>
-                        {category}
-                      </option>
+                      <option key={category} value={category}>{category}</option>
                     ))}
                   </select>
                 </div>
-                
                 {formData.category && categories[formData.category] && (
                   <div className="form-group">
                     <label htmlFor="subdomain" className="form-label">Subdomain (Optional)</label>
@@ -948,15 +913,12 @@ const Tutorial = () => {
                     >
                       <option value="">Select Subdomain (Optional)</option>
                       {categories[formData.category].map(subdomain => (
-                        <option key={subdomain} value={subdomain}>
-                          {subdomain}
-                        </option>
+                        <option key={subdomain} value={subdomain}>{subdomain}</option>
                       ))}
                     </select>
                   </div>
                 )}
               </div>
-
               <div className="form-group">
                 <label htmlFor="description" className="form-label">Description</label>
                 <textarea
@@ -969,7 +931,6 @@ const Tutorial = () => {
                   rows="3"
                 />
               </div>
-
               <div className="form-group">
                 <label className="form-label">Video Type *</label>
                 <div className="type-selector">
@@ -989,7 +950,6 @@ const Tutorial = () => {
                   </div>
                 </div>
               </div>
-
               {formData.videoType === 'youtube' ? (
                 <div className="form-group">
                   <label htmlFor="youtubeUrl" className="form-label">YouTube URL *</label>
@@ -1005,50 +965,93 @@ const Tutorial = () => {
                   />
                 </div>
               ) : (
-                <div className="file-upload-container">
-                  <label className="form-label">Video File *</label>
-                  {formData.videoFile ? (
-                    <>
-                      <div className="file-preview">
-                        <FileVideo className="file-preview-icon" size={24} />
-                        <div className="file-preview-info">
-                          <div className="file-preview-name">{formData.videoFile.name}</div>
-                          <div className="file-preview-size">{formatFileSize(formData.videoFile.size)}</div>
+                <>
+                  <div className="file-upload-container">
+                    <label className="form-label">Video File *</label>
+                    {formData.videoFile ? (
+                      <>
+                        <div className="file-preview">
+                          <FileVideo className="file-preview-icon" size={24} />
+                          <div className="file-preview-info">
+                            <div className="file-preview-name">{formData.videoFile.name}</div>
+                            <div className="file-preview-size">{formatFileSize(formData.videoFile.size)}</div>
+                          </div>
+                          <button 
+                            type="button"
+                            className="file-preview-remove"
+                            onClick={() => removeSelectedFile('videoFile')}
+                          >
+                            <X size={18} />
+                          </button>
                         </div>
-                        <button 
-                          type="button"
-                          className="file-preview-remove"
-                          onClick={removeSelectedFile}
-                        >
-                          <X size={18} />
-                        </button>
-                      </div>
-                      {uploading && (
-                        <div className="progress-bar">
-                          <div 
-                            className="progress-bar-fill" 
-                            style={{ width: `${uploadProgress}%` }}
-                          ></div>
+                        {uploading && (
+                          <div className="progress-bar">
+                            <div 
+                              className="progress-bar-fill" 
+                              style={{ width: `${uploadProgress}%` }}
+                            ></div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <label className="file-upload-input-container">
+                        <Upload className="file-upload-icon" size={30} />
+                        <span className="file-upload-text">Click to upload or drag and drop</span>
+                        <span className="file-upload-hint">MP4, WebM or OGG (Max 100MB)</span>
+                        <input 
+                          type="file"
+                          className="file-upload-input"
+                          onChange={handleFileChange}
+                          accept="video/mp4,video/webm,video/ogg"
+                          ref={fileInputRef}
+                        />
+                      </label>
+                    )}
+                  </div>
+                  <div className="file-upload-container">
+                    <label className="form-label">Thumbnail Image *</label>
+                    {formData.thumbnailFile ? (
+                      <>
+                        <div className="file-preview">
+                          <Image className="file-preview-icon" size={24} />
+                          <div className="file-preview-info">
+                            <div className="file-preview-name">{formData.thumbnailFile.name}</div>
+                            <div className="file-preview-size">{formatFileSize(formData.thumbnailFile.size)}</div>
+                          </div>
+                          <button 
+                            type="button"
+                            className="file-preview-remove"
+                            onClick={() => removeSelectedFile('thumbnailFile')}
+                          >
+                            <X size={18} />
+                          </button>
                         </div>
-                      )}
-                    </>
-                  ) : (
-                    <label className="file-upload-input-container">
-                      <Upload className="file-upload-icon" size={30} />
-                      <span className="file-upload-text">Click to upload or drag and drop</span>
-                      <span className="file-upload-hint">MP4, WebM or OGG (Max 100MB)</span>
-                      <input 
-                        type="file"
-                        className="file-upload-input"
-                        onChange={handleFileChange}
-                        accept="video/mp4,video/webm,video/ogg"
-                        ref={fileInputRef}
-                      />
-                    </label>
-                  )}
-                </div>
+                        {uploading && (
+                          <div className="progress-bar">
+                            <div 
+                              className="progress-bar-fill" 
+                              style={{ width: `${uploadProgress}%` }}
+                            ></div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <label className="file-upload-input-container">
+                        <Upload className="file-upload-icon" size={30} />
+                        <span className="file-upload-text">Click to upload or drag and drop</span>
+                        <span className="file-upload-hint">JPEG, PNG or JPG (Max 5MB)</span>
+                        <input 
+                          type="file"
+                          className="file-upload-input"
+                          onChange={handleThumbnailChange}
+                          accept="image/jpeg,image/png,image/jpg"
+                          ref={thumbnailInputRef}
+                        />
+                      </label>
+                    )}
+                  </div>
+                </>
               )}
-
               <div className="modal-actions">
                 <button 
                   type="button"
@@ -1060,7 +1063,7 @@ const Tutorial = () => {
                 <button 
                   type="submit"
                   className="submit-button"
-                  disabled={uploading || (formData.videoType === 'file' && !formData.videoFile)}
+                  disabled={uploading || (formData.videoType === 'file' && (!formData.videoFile || !formData.thumbnailFile))}
                 >
                   {uploading ? `Uploading ${Math.round(uploadProgress)}%` : 'Upload Tutorial'}
                 </button>
@@ -1070,7 +1073,6 @@ const Tutorial = () => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -1088,33 +1090,16 @@ const Tutorial = () => {
               <p>Are you sure you want to delete this tutorial? This action cannot be undone.</p>
             </div>
             <div className="modal-actions">
-              <button 
-                className="cancel-button"
-                onClick={cancelDelete}
-              >
-                Cancel
-              </button>
-              <button 
-                className="submit-button delete-confirm-button"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
+              <button className="cancel-button" onClick={cancelDelete}>Cancel</button>
+              <button className="submit-button delete-confirm-button" onClick={handleDelete}>Delete</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Video Player Modal */}
       {showVideoModal && currentVideo && (
-        <div 
-          className="modal-overlay"
-          onClick={() => setShowVideoModal(false)}
-        >
-          <div 
-            className="video-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="modal-overlay" onClick={() => setShowVideoModal(false)}>
+          <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
             <button 
               className="video-modal-close"
               onClick={() => setShowVideoModal(false)}
@@ -1146,4 +1131,4 @@ const Tutorial = () => {
   );
 };
 
-export default Tutorial
+export default Tutorial;
