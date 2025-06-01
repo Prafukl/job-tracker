@@ -1,4 +1,5 @@
-// src/App.js
+// src/App.js - Updated with Knowledge Base route
+
 import React from 'react';
 import Header from './component/Header';
 import Dashboard from './component/Dashboard';
@@ -8,7 +9,9 @@ import Notes from './component/Notes';
 import Knowledge from './component/Knowledge';
 import Tutorial from './component/Tutorial';
 import InterviewPrep from './component/InterviewPrep';
-import CompanyDirectory from './component/CompanyDirectory'; // Add this import
+import CompanyDirectory from './component/CompanyDirectory';
+// Import the new Knowledge Base component
+import KnowledgeBaseArticle from './component/KnowledgeBaseArticle';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -39,7 +42,6 @@ const Login = () => {
   }
   
   // Return an empty div - header will display the login modal
-  // We'll trigger the login modal through the Header component
   return (
     <div className="login-container">
       {/* We'll trigger the login modal through the Header component */}
@@ -110,8 +112,13 @@ const AppRouter = () => {
           element: <ProtectedRoute><InterviewPrep /></ProtectedRoute>,
         },
         {
-          path: "companies", // Add the new Company Directory route
-          element: <CompanyDirectory />, // Note: Not protected, visible to all users
+          path: "companies",
+          element: <CompanyDirectory />, // Not protected, visible to all users
+        },
+        // Add the new Knowledge Base route
+        {
+          path: "knowledge-base",
+          element: <ProtectedRoute><KnowledgeBaseArticle /></ProtectedRoute>,
         }
       ],
     },

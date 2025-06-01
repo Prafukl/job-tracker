@@ -73,6 +73,13 @@ const Header = () => {
         label: 'Interview Prep',
         description: 'Practice with custom question sets',
         icon: <Target size={16} />
+      },
+      // Add Knowledge Base to the Learning dropdown
+      {
+        path: '/knowledge-base',
+        label: 'Knowledge Base',
+        description: 'Browse helpful articles and guides',
+        icon: <FileText size={16} />
       }
     ]
   },
