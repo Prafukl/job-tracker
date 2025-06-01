@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 import { 
   collection, 
   query, 
-  //where, 
   orderBy, 
   getDocs, 
   addDoc, 
@@ -29,12 +28,8 @@ import {
   Search, 
   Filter, 
   FileText, 
-  //Image as ImageIcon, 
-  Video, 
-  //Tag
+  Video
 } from 'lucide-react';
-
-  // Add imports at the top of the file
 import { addKnowledgeBaseStyles } from './KnowledgeBaseStyles';
 
 const KnowledgeBaseArticle = () => {
@@ -73,16 +68,12 @@ const KnowledgeBaseArticle = () => {
     'DevOps',
     'UI/UX Design',
     'Project Management',
-     'IT Support'
-    
+    'IT Support'
   ];
 
-  // Add useEffect to initialize styles
+  // Add styles
   useEffect(() => {
-    // Add custom styles
     const removeStyles = addKnowledgeBaseStyles();
-    
-    // Cleanup
     return () => {
       if (removeStyles) removeStyles();
     };
@@ -129,19 +120,17 @@ const KnowledgeBaseArticle = () => {
   }, []);
 
   const extractYoutubeId = (url) => {
-  if (!url) return null;
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
-  return (match && match[2].length === 11) ? match[2] : null;
-};
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
 
-// Add this function to get a properly formatted YouTube embed URL
-const getYoutubeEmbedUrl = (url) => {
-  const videoId = extractYoutubeId(url);
-  if (!videoId) return null;
-  return `https://www.youtube.com/embed/${videoId}`;
-};
-
+  const getYoutubeEmbedUrl = (url) => {
+    const videoId = extractYoutubeId(url);
+    if (!videoId) return null;
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -237,31 +226,32 @@ const getYoutubeEmbedUrl = (url) => {
     e.preventDefault();
     
     if (!currentUser || !isAdmin) {
-    alert('Only admin users can add knowledge base articles');
-    return;
-  }
-  
-  if (!formData.title || !formData.content || !formData.domain) {
-    alert('Please fill in all required fields');
-    return;
-  }
-    try {
-      // Process video URL if it's from YouTube
-    let processedVideoUrl = formData.videoUrl;
-    if (formData.videoUrl && (formData.videoUrl.includes('youtube.com') || formData.videoUrl.includes('youtu.be'))) {
-      const embedUrl = getYoutubeEmbedUrl(formData.videoUrl);
-      if (embedUrl) {
-        processedVideoUrl = embedUrl;
-      }
+      alert('Only admin users can add knowledge base articles');
+      return;
     }
     
-    const articleData = {
-      ...formData,
-      videoUrl: processedVideoUrl,
-      createdBy: currentUser.uid,
-      createdByEmail: currentUser.email,
-      createdAt: serverTimestamp()
-    };
+    if (!formData.title || !formData.content || !formData.domain) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    try {
+      // Process video URL if it's from YouTube
+      let processedVideoUrl = formData.videoUrl;
+      if (formData.videoUrl && (formData.videoUrl.includes('youtube.com') || formData.videoUrl.includes('youtu.be'))) {
+        const embedUrl = getYoutubeEmbedUrl(formData.videoUrl);
+        if (embedUrl) {
+          processedVideoUrl = embedUrl;
+        }
+      }
+      
+      const articleData = {
+        ...formData,
+        videoUrl: processedVideoUrl,
+        createdBy: currentUser.uid,
+        createdByEmail: currentUser.email,
+        createdAt: serverTimestamp()
+      };
       
       if (showEditModal && selectedArticle) {
         // Update existing article
@@ -451,44 +441,33 @@ const getYoutubeEmbedUrl = (url) => {
                       <img 
                         key={index} 
                         src={image.url} 
-                        alt={`Article image ${index + 1}`} 
+                        alt={`Content for article ${index + 1}`} 
                         className="kb-article-image"
                       />
                     ))}
                   </div>
                 )}
                 
-              {article.videoUrl && (
-<div className="kb-video-container">
-    {/* Optional Video Title Bar */}
-    <div className="kb-video-title-bar">
-      <Video size={18} />
-      <span>Video: {article.title}</span>
-    </div>
-    
-    <div className="kb-article-video">
-      {article.videoUrl.includes('youtube.com') || article.videoUrl.includes('youtu.be') ? (
-        <iframe
-          src={getYoutubeEmbedUrl(article.videoUrl) || article.videoUrl}
-          title={article.title}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="kb-video-iframe"
-        ></iframe>
-      ) : (
-        <iframe
-          src={article.videoUrl}
-          title={article.title}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="kb-video-iframe"
-        ></iframe>
-      )}
-    </div>
-  </div>
-)}
+                {article.videoUrl && (
+                  <div className="kb-video-container">
+                    <div className="kb-video-title-bar">
+                      <Video size={18} />
+                      <span>Video: {article.title}</span>
+                    </div>
+                    
+                    <div className="kb-article-video">
+                      <iframe
+                        src={article.videoUrl.includes('youtube.com') || article.videoUrl.includes('youtu.be') ? 
+                              getYoutubeEmbedUrl(article.videoUrl) || article.videoUrl : article.videoUrl}
+                        title={article.title}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="kb-video-iframe"
+                      ></iframe>
+                    </div>
+                  </div>
+                )}
                 
                 <div className="kb-article-footer">
                   <div className="kb-article-date">
@@ -613,10 +592,10 @@ const getYoutubeEmbedUrl = (url) => {
                   name="videoUrl"
                   value={formData.videoUrl}
                   onChange={handleChange}
-                  placeholder="https://www.youtube.com/embed/VIDEO_ID"
+                  placeholder="https://www.youtube.com/watch?v=VIDEO_ID"
                 />
                 <small className="kb-form-help">
-                  For YouTube videos, use embed URL format: https://www.youtube.com/embed/VIDEO_ID
+                  Paste regular YouTube or Vimeo URLs - they'll be automatically converted to embed format
                 </small>
               </div>
               
@@ -738,8 +717,6 @@ const getYoutubeEmbedUrl = (url) => {
           </div>
         </div>
       )}
-      
-      {/* No inline styles - using imported styles from KnowledgeBaseStyles.js */}
     </div>
   );
 };
