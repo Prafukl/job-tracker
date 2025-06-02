@@ -31,7 +31,7 @@ import {
   Image
 } from 'lucide-react';
 import { addTutorialStyles } from './TutorialStyles';
-
+import { useNavigate } from 'react-router-dom';
 const Tutorial = () => {
   const { currentUser } = useAuth();
   const [tutorials, setTutorials] = useState([]);
@@ -42,6 +42,7 @@ const Tutorial = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [tutorialToDelete, setTutorialToDelete] = useState(null);
   const [editingTutorial, setEditingTutorial] = useState(null);
+  const navigate = useNavigate();
   const [editFormData, setEditFormData] = useState({
     title: '',
     description: '',
@@ -742,34 +743,66 @@ const Tutorial = () => {
 
       <div className="filter-container">
         <button 
-          className={`filter-button ${activeCategory === 'All' ? 'active' : ''}`}
-          onClick={() => setActiveCategory('All')}
-        >
-          All
-        </button>
-        {Object.keys(categories).map(category => (
-          <button
-            key={category}
-            className={`filter-button ${activeCategory === category ? 'active' : ''}`}
-            onClick={() => setActiveCategory(category)}
-          >
-            {category === 'Software Engineering' ? '💻' :
-             category === 'Data Engineering' ? '📊' :
-             category === 'Web Development' ? '🌐' :
-             category === 'Mobile Development' ? '📱' :
-             category === 'DevOps' ? '⚙️' :
-             category === 'Cloud Computing' ? '☁️' :
-             category === 'IT Support' ? '🛠️' :
-             category === 'Cybersecurity' ? '🔒' :
-             category === 'UX/UI Design' ? '🎨' :
-             category === 'Project Management' ? '📋' :
-             category === 'Linkedin' ? '💼' :
-             category === 'Resume Building' ? '📄' :
-             category === 'Email Writing' ? '✉️' : '📚'}
-            {category}
-          </button>
-        ))}
-      </div>
+    className={`filter-button ${activeCategory === 'All' ? 'active' : ''}`}
+    onClick={() => setActiveCategory('All')}
+  >
+    All
+  </button>
+  
+  {/* Enhanced category buttons with navigation */}
+  {Object.keys(categories).map(category => (
+    <button
+      key={category}
+      className={`filter-button ${activeCategory === category ? 'active' : ''} ${category === 'IT Support' ? 'enhanced-filter' : ''}`}
+      onClick={() => {
+        if (category === 'IT Support') {
+          // Navigate to dedicated IT Support page
+          navigate('/tutorials/it-support');
+        } else {
+          // Regular category filtering
+          setActiveCategory(category);
+        }
+      }}
+      style={category === 'IT Support' ? {
+        background: 'linear-gradient(135deg, #4a6cf7, #3b5ce4)',
+        color: 'white',
+        border: '2px solid #4a6cf7',
+        position: 'relative',
+        overflow: 'hidden'
+      } : {}}
+    >
+      {category === 'Software Engineering' ? '💻' :
+       category === 'Data Engineering' ? '📊' :
+       category === 'Web Development' ? '🌐' :
+       category === 'Mobile Development' ? '📱' :
+       category === 'DevOps' ? '⚙️' :
+       category === 'Cloud Computing' ? '☁️' :
+       category === 'IT Support' ? '🛠️' :
+       category === 'Cybersecurity' ? '🔒' :
+       category === 'UX/UI Design' ? '🎨' :
+       category === 'Project Management' ? '📋' :
+       category === 'Linkedin' ? '💼' :
+       category === 'Resume Building' ? '📄' :
+       category === 'Email Writing' ? '✉️' : '📚'}
+      {category}
+      {category === 'IT Support' && (
+        <span style={{
+          position: 'absolute',
+          top: '-2px',
+          right: '-2px',
+          background: '#10b981',
+          color: 'white',
+          fontSize: '10px',
+          padding: '2px 6px',
+          borderRadius: '8px',
+          fontWeight: 'bold'
+        }}>
+          NEW
+        </span>
+      )}
+    </button>
+  ))}
+</div>
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '40px' }}>

@@ -1,4 +1,4 @@
-// src/App.js - Updated with Knowledge Base route
+// src/App.js - Updated with IT Support route
 
 import React from 'react';
 import Header from './component/Header';
@@ -10,8 +10,9 @@ import Knowledge from './component/Knowledge';
 import Tutorial from './component/Tutorial';
 import InterviewPrep from './component/InterviewPrep';
 import CompanyDirectory from './component/CompanyDirectory';
-// Import the new Knowledge Base component
 import KnowledgeBaseArticle from './component/KnowledgeBaseArticle';
+// Import the new IT Support page
+import ITSupportPage from './component/ITSupportPage';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -19,12 +20,10 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 const ProtectedRoute = ({ children }) => {
   const { currentUser, loading } = useAuth();
   
-  // If still loading auth state, we can show a loading screen
   if (loading) {
     return <div className="loading-container">Loading...</div>;
   }
   
-  // If not logged in, redirect to home page
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
@@ -36,15 +35,12 @@ const ProtectedRoute = ({ children }) => {
 const Login = () => {
   const { currentUser } = useAuth();
   
-  // If already logged in, redirect to dashboard
   if (currentUser) {
     return <Navigate to="/dashboard" />;
   }
   
-  // Return an empty div - header will display the login modal
   return (
     <div className="login-container">
-      {/* We'll trigger the login modal through the Header component */}
       <div className="login-message" style={{ 
         textAlign: 'center', 
         padding: '100px 20px',
@@ -80,7 +76,7 @@ const AppRouter = () => {
       element: <Layout />,
       children: [
         {
-          index: true, // This means the default route "/"
+          index: true,
           element: <Navigate to="/login" />,
         },
         {
@@ -107,15 +103,19 @@ const AppRouter = () => {
           path: "tutorials",
           element: <ProtectedRoute><Tutorial /></ProtectedRoute>,
         },
+        // Add the new IT Support route
+        {
+          path: "tutorials/it-support",
+          element: <ProtectedRoute><ITSupportPage /></ProtectedRoute>,
+        },
         {
           path: "interview-prep",
           element: <ProtectedRoute><InterviewPrep /></ProtectedRoute>,
         },
         {
           path: "companies",
-          element: <CompanyDirectory />, // Not protected, visible to all users
+          element: <CompanyDirectory />,
         },
-        // Add the new Knowledge Base route
         {
           path: "knowledge-base",
           element: <ProtectedRoute><KnowledgeBaseArticle /></ProtectedRoute>,
