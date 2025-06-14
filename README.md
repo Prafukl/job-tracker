@@ -334,20 +334,7 @@ npm run build
 yarn build
 ```
 
-### Deploy to Firebase Hosting
-```bash
-# Install Firebase CLI
-npm install -g firebase-tools
-
-# Login to Firebase
-firebase login
-
-# Initialize Firebase in your project
-firebase init hosting
-
-# Deploy to Firebase
-firebase deploy
-```
+### Deploy to Cloudflare Hosting ##
 
 ### Deploy to Other Platforms
 - **Netlify**: Connect your GitHub repository for automatic deployments
@@ -365,12 +352,7 @@ We welcome contributions to JobTrack! Here's how you can help:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Coding Standards
-- Use ES6+ JavaScript features
-- Follow React best practices and hooks
-- Maintain consistent code formatting
-- Add JSDoc comments for complex functions
-- Write meaningful commit messages
+
 
 ### Bug Reports
 - Use the GitHub Issues template
@@ -380,7 +362,7 @@ We welcome contributions to JobTrack! Here's how you can help:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the SCT  file for details.
 
 ## 🆘 Support
 
