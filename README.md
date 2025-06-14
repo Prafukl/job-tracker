@@ -287,6 +287,136 @@ The application uses the following Firestore collections:
 - Location-based filtering
 - Admin controls for company data
 
+- 
+graph TB
+    %% User Layer
+    USER[👤 User Browser]
+    
+    %% Frontend React Components Layer
+    subgraph "🖥️ FRONTEND - React Application"
+        APP[App.js - Main Router]
+        HEADER[Header.jsx - Navigation]
+        
+        subgraph "📊 Dashboard & Analytics"
+            DASHBOARD[Dashboard.jsx]
+            CHARTS[Chart.js Visualizations]
+        end
+        
+        subgraph "📋 Job Management"
+            JOBLIST[Joblist.jsx - Applications]
+            COMPANIES[CompanyDirectory.jsx]
+        end
+        
+        subgraph "📚 Learning & Resources"
+            TUTORIALS[Tutorial.jsx - Videos]
+            KNOWLEDGE[Knowledge.jsx - Tools]
+            INTERVIEW[InterviewPrep.jsx]
+            ARTICLES[KnowledgeBaseArticle.jsx]
+        end
+        
+        subgraph "📝 Notes & Documentation"
+            NOTES[Notes.jsx]
+        end
+        
+        subgraph "🔐 Authentication System"
+            AUTH_CONTEXT[AuthContext.js - State Management]
+            LOGIN_MODAL[Login/Register Modals]
+        end
+    end
+    
+    %% Backend Firebase Services
+    subgraph "🔥 FIREBASE BACKEND"
+        subgraph "🔐 Authentication Service"
+            FIREBASE_AUTH[Firebase Authentication]
+            USER_PROFILES[User Profile Management]
+        end
+        
+        subgraph "📊 Cloud Firestore Database"
+            USERS_COLLECTION[(Users Collection)]
+            APPS_COLLECTION[(Applications Collection)]
+            COMPANIES_COLLECTION[(Companies Collection)]
+            TUTORIALS_COLLECTION[(Tutorials Collection)]
+            NOTES_COLLECTION[(Notes Collection)]
+        end
+        
+        subgraph "📁 Storage Service"
+            FIREBASE_STORAGE[Firebase Storage]
+            VIDEO_FILES[Video Files]
+            THUMBNAILS[Thumbnail Images]
+        end
+        
+        subgraph "🌐 Hosting Service"
+            FIREBASE_HOSTING[Firebase Hosting]
+        end
+    end
+    
+    %% External Services
+    subgraph "🌍 External Services"
+        YOUTUBE[YouTube API]
+        EXTERNAL_TOOLS[External Career Tools]
+    end
+    
+    %% User Interactions
+    USER --> APP
+    APP --> HEADER
+    HEADER --> LOGIN_MODAL
+    HEADER --> AUTH_CONTEXT
+    
+    %% Authentication Flow
+    LOGIN_MODAL --> FIREBASE_AUTH
+    FIREBASE_AUTH --> AUTH_CONTEXT
+    AUTH_CONTEXT --> USER_PROFILES
+    USER_PROFILES --> USERS_COLLECTION
+    
+    %% Dashboard Data Flow
+    DASHBOARD --> AUTH_CONTEXT
+    DASHBOARD --> APPS_COLLECTION
+    DASHBOARD --> CHARTS
+    CHARTS --> USER
+    
+    %% Job Management Flow
+    JOBLIST --> APPS_COLLECTION
+    JOBLIST --> COMPANIES_COLLECTION
+    COMPANIES --> COMPANIES_COLLECTION
+    
+    %% Learning Resources Flow
+    TUTORIALS --> TUTORIALS_COLLECTION
+    TUTORIALS --> FIREBASE_STORAGE
+    TUTORIALS --> YOUTUBE
+    KNOWLEDGE --> EXTERNAL_TOOLS
+    INTERVIEW --> APPS_COLLECTION
+    ARTICLES --> TUTORIALS_COLLECTION
+    
+    %% Notes System Flow
+    NOTES --> NOTES_COLLECTION
+    NOTES --> AUTH_CONTEXT
+    
+    %% File Storage Flow
+    VIDEO_FILES --> FIREBASE_STORAGE
+    THUMBNAILS --> FIREBASE_STORAGE
+    
+    %% Hosting
+    FIREBASE_HOSTING --> USER
+    
+    %% Database Relationships
+    USERS_COLLECTION -.->|"owns"| APPS_COLLECTION
+    USERS_COLLECTION -.->|"creates"| NOTES_COLLECTION
+    APPS_COLLECTION -.->|"references"| COMPANIES_COLLECTION
+    TUTORIALS_COLLECTION -.->|"stores files in"| FIREBASE_STORAGE
+    
+    %% Styling
+    classDef userClass fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef frontendClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef backendClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef databaseClass fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef externalClass fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    
+    class USER userClass
+    class APP,HEADER,DASHBOARD,JOBLIST,COMPANIES,TUTORIALS,KNOWLEDGE,INTERVIEW,ARTICLES,NOTES,AUTH_CONTEXT,LOGIN_MODAL,CHARTS frontendClass
+    class FIREBASE_AUTH,USER_PROFILES,FIREBASE_STORAGE,FIREBASE_HOSTING backendClass
+    class USERS_COLLECTION,APPS_COLLECTION,COMPANIES_COLLECTION,TUTORIALS_COLLECTION,NOTES_COLLECTION,VIDEO_FILES,THUMBNAILS databaseClass
+    class YOUTUBE,EXTERNAL_TOOLS externalClass
+  
 ## 🔥 Firebase Setup
 
 ### 1. Create Firebase Project
