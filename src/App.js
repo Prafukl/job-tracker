@@ -1,4 +1,4 @@
-// src/App.js - Updated with Knowledge Base route
+// src/App.js - Updated with Landing Page
 
 import React from 'react';
 import Header from './component/Header';
@@ -10,8 +10,9 @@ import Knowledge from './component/Knowledge';
 import Tutorial from './component/Tutorial';
 import InterviewPrep from './component/InterviewPrep';
 import CompanyDirectory from './component/CompanyDirectory';
-// Import the new Knowledge Base component
+import AdminPanel from './component/AdminPanel';
 import KnowledgeBaseArticle from './component/KnowledgeBaseArticle';
+import LandingPage from './component/LandingPage';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -19,12 +20,10 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 const ProtectedRoute = ({ children }) => {
   const { currentUser, loading } = useAuth();
   
-  // If still loading auth state, we can show a loading screen
   if (loading) {
     return <div className="loading-container">Loading...</div>;
   }
   
-  // If not logged in, redirect to home page
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
@@ -36,15 +35,12 @@ const ProtectedRoute = ({ children }) => {
 const Login = () => {
   const { currentUser } = useAuth();
   
-  // If already logged in, redirect to dashboard
   if (currentUser) {
     return <Navigate to="/dashboard" />;
   }
   
-  // Return an empty div - header will display the login modal
   return (
     <div className="login-container">
-      {/* We'll trigger the login modal through the Header component */}
       <div className="login-message" style={{ 
         textAlign: 'center', 
         padding: '100px 20px',
@@ -63,8 +59,8 @@ const Login = () => {
   );
 };
 
-// Common Layout with Header and Footer
-const Layout = () => (
+// App Layout for protected routes (with Header and Footer)
+const AppLayout = () => (
   <>
     <Header />
     <Outlet />
@@ -72,16 +68,31 @@ const Layout = () => (
   </>
 );
 
-// Create router with auth protection for routes
+// Landing Layout (without Header and Footer since LandingPage has its own)
+const LandingLayout = () => <Outlet />;
+
+// Create router with landing page and app routes
 const AppRouter = () => {
   const router = createBrowserRouter([
+    // Landing page route (standalone)
     {
       path: "/",
-      element: <Layout />,
+      element: <LandingLayout />,
       children: [
         {
-          index: true, // This means the default route "/"
-          element: <Navigate to="/login" />,
+          index: true,
+          element: <LandingPage />,
+        }
+      ]
+    },
+    // App routes (with header/footer)
+    {
+      path: "/app",
+      element: <AppLayout />,
+      children: [
+        {
+          index: true,
+          element: <Navigate to="/app/login" />,
         },
         {
           path: "login",
@@ -113,15 +124,59 @@ const AppRouter = () => {
         },
         {
           path: "companies",
-          element: <CompanyDirectory />, // Not protected, visible to all users
+          element: <CompanyDirectory />,
         },
-        // Add the new Knowledge Base route
         {
           path: "knowledge-base",
           element: <ProtectedRoute><KnowledgeBaseArticle /></ProtectedRoute>,
+        },
+        {
+          path: "admin",
+          element: <ProtectedRoute><AdminPanel /></ProtectedRoute>,
         }
       ],
     },
+    // Redirect old routes to new structure (backward compatibility)
+    {
+      path: "/login",
+      element: <Navigate to="/app/login" replace />,
+    },
+    {
+      path: "/dashboard",
+      element: <Navigate to="/app/dashboard" replace />,
+    },
+    {
+      path: "/joblist",
+      element: <Navigate to="/app/joblist" replace />,
+    },
+    {
+      path: "/notes",
+      element: <Navigate to="/app/notes" replace />,
+    },
+    {
+      path: "/knowledge",
+      element: <Navigate to="/app/knowledge" replace />,
+    },
+    {
+      path: "/tutorials",
+      element: <Navigate to="/app/tutorials" replace />,
+    },
+    {
+      path: "/interview-prep",
+      element: <Navigate to="/app/interview-prep" replace />,
+    },
+    {
+      path: "/companies",
+      element: <Navigate to="/app/companies" replace />,
+    },
+    {
+      path: "/knowledge-base",
+      element: <Navigate to="/app/knowledge-base" replace />,
+    },
+    {
+      path: "/admin",
+      element: <Navigate to="/app/admin" replace />,
+    }
   ]);
 
   return <RouterProvider router={router} />;

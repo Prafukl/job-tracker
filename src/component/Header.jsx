@@ -39,6 +39,9 @@ const Header = () => {
   const { currentUser, login, register, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Check if current user is admin
+  const isAdmin = currentUser && currentUser.email === 'admin@gmail.com';
   
   // Enhanced navigation items with categories and dropdowns
   const navigationCategories = {
@@ -92,12 +95,14 @@ const Header = () => {
         description: 'Keep track of important information',
         icon: <FileText size={16} />
       },
+      
       {
         path: '/companies',
         label: 'Company Directory',
         description: 'Browse companies and career opportunities',
         icon: <Building2 size={16} />
       }
+
     ]
   }
 };
@@ -108,7 +113,13 @@ const Header = () => {
       path: '/dashboard', 
       label: 'Dashboard', 
       icon: <BarChart3 size={16} /> 
-    }
+    },
+    // Conditionally add admin panel for admin users
+    ...(isAdmin ? [{
+      path: '/admin',
+      label: 'Admin Panel',
+      icon: <Crown size={16} />
+    }] : [])
   ];
 
   // Auto-open login modal when on the login page and not logged in
@@ -263,9 +274,6 @@ const Header = () => {
       console.error('Logout error:', error);
     }
   };
-
-  // Check if current user is admin
-  const isAdmin = currentUser && currentUser.email === 'admin@gmail.com';
 
   // Check if current path is active for dropdown items
   const isPathActive = (path) => location.pathname === path;
