@@ -7,8 +7,6 @@ import {
   getDocs, 
   deleteDoc, 
   doc,
-  where,
-  limit 
 } from 'firebase/firestore';
 import { 
   getStorage, 
@@ -23,12 +21,10 @@ import {
   FileText, 
   Trash2, 
   Eye, 
-  Upload, 
   Plus,
   BarChart3,
   Crown,
   AlertTriangle,
-  Calendar
 } from 'lucide-react';
 
 const AdminPanel = () => {
