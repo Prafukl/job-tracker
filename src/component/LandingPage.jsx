@@ -260,7 +260,7 @@ const LandingPage = () => {
         <div className="container">
           <div className="section-header scroll-reveal">
             <h2>Everything IT Professionals Need</h2>
-            <p>A comprehensive suite of tools designed to streamline IT operations, enhance security, and improve service delivery.</p>
+            <p>A comprehensive suite of tools designed to streamline IT operations, enhance security, and to be job ready </p>
           </div>
 
           <div className="features-grid">
@@ -268,8 +268,8 @@ const LandingPage = () => {
               <div className="feature-icon service-management">
                 <Headphones size={32} />
               </div>
-              <h3>Service Management</h3>
-              <p>Complete ITSM suite with ticket management, service desk, and change management workflows.</p>
+              <h3>Job Tracking Dashborad </h3>
+              <p>Complete Dashborad for Tracking your Job application </p>
               <ul className="feature-list">
                 <li>
                   <CheckCircle size={16} />
