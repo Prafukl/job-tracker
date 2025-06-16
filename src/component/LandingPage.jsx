@@ -13,7 +13,6 @@ import {
   X,
   Monitor,
   Shield,
-  Network,
   Cloud,
   Headphones,
   Settings,
